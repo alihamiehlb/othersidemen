@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { LoadingScreen } from '@/components/branding/LoadingScreen'
+import { SeoHead } from '@/components/seo/SeoHead'
 import { useAuth } from '@/contexts/AuthContext'
 
 export function AdminLayout() {
@@ -11,6 +12,8 @@ export function AdminLayout() {
   if (user.role !== 'admin') return <Navigate to="/account" replace />
 
   return (
+    <>
+      <SeoHead title="Admin" noindex canonicalPath="/admin" />
     <div className="min-h-screen bg-brand-black text-brand-white">
       <div className="lg:flex">
         <AdminSidebar />
@@ -24,5 +27,6 @@ export function AdminLayout() {
         </main>
       </div>
     </div>
+    </>
   )
 }

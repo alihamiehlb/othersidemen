@@ -1,12 +1,21 @@
 import { Link } from 'react-router-dom'
 import type { PolicyDocument } from './policies'
+import { SeoHead } from '@/components/seo/SeoHead'
 
 interface PolicyPageProps {
   doc: PolicyDocument
+  slug: string
 }
 
-export function PolicyPage({ doc }: PolicyPageProps) {
+export function PolicyPage({ doc, slug }: PolicyPageProps) {
   return (
+    <>
+      <SeoHead
+        title={doc.title}
+        description={doc.intro ?? `${doc.title} — OTHER SIDE Men.`}
+        canonicalPath={`/${slug}`}
+        ogType="article"
+      />
     <div className="page-enter mx-auto max-w-3xl px-6 py-16 lg:px-10">
       <p className="mb-2 text-[10px] uppercase tracking-[0.3em] text-brand-muted">Legal</p>
       <h1 className="mb-2 text-3xl font-black uppercase tracking-tight">{doc.title}</h1>
@@ -36,5 +45,6 @@ export function PolicyPage({ doc }: PolicyPageProps) {
         <Link to="/security-policy" className="text-brand-muted hover:text-brand-white">Security</Link>
       </div>
     </div>
+    </>
   )
 }

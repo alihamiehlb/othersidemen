@@ -1,5 +1,6 @@
 import { Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import type { MouseEvent } from 'react'
 import { ProductImage } from '@/components/ui/ProductImage'
 import { displayProductName } from '@/lib/productDisplay'
 
@@ -68,26 +69,16 @@ export function ProductCard({ product, index = 0, showWishlist = false, onSelect
     </>
   )
 
-  if (onSelect) {
-    return (
-      <button
-        type="button"
-        onClick={() => onSelect(product)}
-        className="product-card group block w-full text-left"
-        style={{ animationDelay: `${index * 60}ms` }}
-      >
-        <article>
-          {imageBlock}
-          {meta}
-        </article>
-      </button>
-    )
-  }
-
   return (
     <Link
       to={`/product/${product.slug}`}
-      className="product-card group block"
+      onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+        if (onSelect) {
+          e.preventDefault()
+          onSelect(product)
+        }
+      }}
+      className="product-card group block w-full text-left"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <article>

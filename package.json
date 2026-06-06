@@ -15,7 +15,7 @@
     "dev:client": "npm run dev -w client",
     "dev:server": "npm run dev -w server",
     "build": "npm run build -w client && npm run build -w server",
-    "build:client": "node scripts/generate-catalog-preview.mjs && npm run build -w client",
+    "build:client": "node scripts/generate-catalog-preview.mjs && node scripts/generate-sitemap.mjs && npm run build -w client",
     "build:server": "npm run build -w server",
     "deploy:pages": "npm run build:client && npx wrangler pages deploy client/dist --project-name=twoside-store --commit-dirty=true",
     "deploy:api": "npm run deploy -w twoside-api-worker",

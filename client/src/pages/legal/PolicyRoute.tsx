@@ -9,5 +9,5 @@ interface PolicyRouteProps {
 export function PolicyRoute({ slug }: PolicyRouteProps) {
   const doc = POLICIES[slug]
   if (!doc) return <Navigate to="/" replace />
-  return <PolicyPage doc={doc} />
+  return <PolicyPage doc={doc} slug={slug} />
 }

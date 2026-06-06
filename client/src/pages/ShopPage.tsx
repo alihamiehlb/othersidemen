@@ -8,6 +8,7 @@ import { ErrorScreen } from '@/components/branding/ErrorScreen'
 import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
 
 import { ProductModal } from '@/components/ui/ProductModal'
+import { SeoHead } from '@/components/seo/SeoHead'
 import { useProductModal } from '@/hooks/useProductModal'
 import { api } from '@/lib/api'
 import { loadCatalogPreview, previewProducts } from '@/lib/catalogPreview'
@@ -111,6 +112,12 @@ export function ShopPage() {
   if (error) return <ErrorScreen title="Collection unavailable" onRetry={() => window.location.reload()} />
 
   return (
+    <>
+      <SeoHead
+        title="Shop All — Men's Streetwear"
+        description="Browse the full OTHER SIDE men's collection — outerwear, tops, footwear, and accessories."
+        canonicalPath="/shop"
+      />
     <div className="page-enter mx-auto max-w-[1600px] px-6 py-16 lg:px-10">
       <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.3em] text-brand-muted">Men&apos;s Collection</p>
       <h1 className="mb-2 text-3xl font-black uppercase tracking-tight lg:text-4xl">Shop All</h1>
@@ -157,5 +164,6 @@ export function ShopPage() {
 
       <ProductModal product={selected} loading={modalLoading} onClose={closeProduct} />
     </div>
+    </>
   )
 }

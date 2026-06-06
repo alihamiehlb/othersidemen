@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { LoadingScreen } from '@/components/branding/LoadingScreen'
 import { ErrorScreen } from '@/components/branding/ErrorScreen'
 import { ProductImage } from '@/components/ui/ProductImage'
+import { SeoHead, buildProductJsonLd } from '@/components/seo/SeoHead'
 import { useCart } from '@/contexts/CartContext'
 import { api } from '@/lib/api'
 import {
@@ -76,6 +77,22 @@ export function ProductPage() {
   }
 
   return (
+    <>
+      <SeoHead
+        title={title}
+        description={description || `${title} — men's streetwear at OTHER SIDE.`}
+        canonicalPath={`/product/${product.slug}`}
+        ogType="product"
+        ogImage={product.images[0] ?? '/images/hero.webp'}
+        jsonLd={buildProductJsonLd({
+          name: title,
+          slug: product.slug,
+          description,
+          price: product.price,
+          images: product.images,
+          category: product.category,
+        })}
+      />
     <div className="page-enter mx-auto grid max-w-[1200px] gap-10 px-6 py-16 lg:grid-cols-2 lg:px-10">
       <div className="flex min-h-[420px] items-center justify-center overflow-hidden rounded-lg bg-brand-gray lg:min-h-[560px]">
         <ProductImage
@@ -142,5 +159,6 @@ export function ProductPage() {
         {message && <p className="mt-4 text-sm text-brand-muted">{message}</p>}
       </div>
     </div>
+    </>
   )
 }
