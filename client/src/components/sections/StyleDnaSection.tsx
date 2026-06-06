@@ -61,7 +61,8 @@ export function StyleDnaSection() {
                 className="group relative flex overflow-hidden rounded-lg border border-theme-subtle bg-brand-gray"
                 style={{ aspectRatio: '3/5' }}
               >
-                <div className="flex flex-1 flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent" />
+                <div className="relative z-10 flex flex-1 flex-col justify-end p-4">
                   <h3 className="text-xs font-bold uppercase tracking-widest">{card.label.title}</h3>
                   <p className="mt-1 text-[10px] text-brand-muted">{card.label.description}</p>
                 </div>

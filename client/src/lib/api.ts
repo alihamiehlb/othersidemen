@@ -1,10 +1,16 @@
 const API_BASE = import.meta.env.VITE_API_URL ?? ''
+const REQUEST_TIMEOUT_MS = 12_000
 
 let csrfToken: string | null = null
 
+function withTimeout(options: RequestInit = {}): RequestInit {
+  if (options.signal) return options
+  return { ...options, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) }
+}
+
 async function getCsrfToken(): Promise<string> {
   if (csrfToken) return csrfToken
-  const res = await fetch(`${API_BASE}/api/csrf-token`, { credentials: 'include' })
+  const res = await fetch(`${API_BASE}/api/csrf-token`, withTimeout({ credentials: 'include' }))
   if (!res.ok) return ''
   const json = await res.json()
   csrfToken = json.data?.csrfToken ?? null
@@ -38,11 +44,11 @@ export async function api<T>(
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
-      const res = await fetch(`${API_BASE}${path}`, {
+      const res = await fetch(`${API_BASE}${path}`, withTimeout({
         ...options,
         headers,
         credentials: 'include',
-      })
+      }))
 
       const text = await res.text()
       if (!text) {

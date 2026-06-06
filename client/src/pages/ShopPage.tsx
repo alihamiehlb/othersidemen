@@ -10,6 +10,7 @@ import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
 import { ProductModal } from '@/components/ui/ProductModal'
 import { useProductModal } from '@/hooks/useProductModal'
 import { api } from '@/lib/api'
+import { loadCatalogPreview, previewProducts } from '@/lib/catalogPreview'
 
 const CATEGORIES = ['all', 'looks', 'outerwear', 'tops', 'bottoms', 'footwear', 'accessories'] as const
 
@@ -44,13 +45,25 @@ export function ShopPage() {
     })
     if (cat !== 'all') params.set('category', cat)
 
-    const res = await api<ProductCardData[]>(`/api/products?${params}`, {}, 4)
-    if (!res.success || !res.data) return false
+    const res = await api<ProductCardData[]>(`/api/products?${params}`, {}, 2)
+    if (res.success && res.data) {
+      const nextTotal = typeof res.meta?.total === 'number' ? res.meta.total : res.data.length
+      setTotal(nextTotal)
+      setProducts((prev) => (replace ? res.data! : [...prev, ...res.data!]))
+      return true
+    }
 
-    const nextTotal = typeof res.meta?.total === 'number' ? res.meta.total : res.data.length
-    setTotal(nextTotal)
-    setProducts((prev) => (replace ? res.data! : [...prev, ...res.data!]))
-    return true
+    if (replace && pageNum === 1) {
+      const preview = await loadCatalogPreview()
+      const fallback = previewProducts(preview, cat === 'all' ? undefined : cat, PAGE_SIZE)
+      if (fallback.length) {
+        setTotal(fallback.length)
+        setProducts(fallback)
+        return true
+      }
+    }
+
+    return false
   }, [])
 
   useEffect(() => {

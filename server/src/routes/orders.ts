@@ -4,8 +4,9 @@ import type { AuthRequest } from '../middleware/auth.js'
 import { requireAuth } from '../middleware/auth.js'
 import { validateObjectId } from '../middleware/validateObjectId.js'
 import { Order } from '../models/Order.js'
+import { Product } from '../models/Product.js'
 import { orderCreateScope, orderListFilter, orderReadFilter, policyContextFromAuth, PolicyError } from '../policies/accessPolicies.js'
-import { cartTotal, clearCart, getCart, resolveCartKey } from '../services/cart.js'
+import { cartTotal, clearCart, getCart, resolveCartKey, type CartItem } from '../services/cart.js'
 import { createWhishCheckout } from '../services/whishPay.js'
 import { env } from '../config/env.js'
 import { sendError, sendSuccess } from '../utils/apiResponse.js'
@@ -77,15 +78,30 @@ ordersRouter.post('/checkout', asyncHandler(async (req, res) => {
     return
   }
 
+  // Re-validate prices from DB — never trust cached/client-supplied prices
+  const productIds = [...new Set(cart.items.map((i) => i.productId))]
+  const dbProducts = await Product.find({ _id: { $in: productIds }, isActive: true }).lean()
+  const priceMap = new Map(dbProducts.map((p) => [p._id.toString(), p.price]))
+
+  const verifiedItems: CartItem[] = []
+  for (const item of cart.items) {
+    const dbPrice = priceMap.get(item.productId)
+    if (dbPrice === undefined) {
+      sendError(res, `Product "${item.name}" is no longer available`, 400)
+      return
+    }
+    verifiedItems.push({ ...item, price: dbPrice })
+  }
+
   const { userId } = orderCreateScope(ctx)
-  const subtotal = cartTotal(cart.items)
+  const subtotal = cartTotal(verifiedItems)
   const shipping = subtotal >= 100 ? 0 : 9.99
   const total = subtotal + shipping
   const paymentMethod = parsed.data.paymentMethod
 
   const order = await Order.create({
     userId,
-    items: cart.items.map((i) => ({
+    items: verifiedItems.map((i) => ({
       productId: i.productId,
       name: i.name,
       price: i.price,

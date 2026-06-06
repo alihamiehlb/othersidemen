@@ -14,7 +14,8 @@ const envSchema = z.object({
   GOOGLE_CALLBACK_URL: z.string().default('http://localhost:3001/api/auth/google/callback'),
   CSRF_SECRET: z.string().min(32, 'CSRF_SECRET must be at least 32 characters'),
   ADMIN_EMAIL: z.string().email().optional(),
-  RECAPTCHA_SECRET_KEY: z.string().optional(),
+  TURNSTILE_SECRET_KEY: z.string().optional(),
+  RECAPTCHA_SECRET_KEY: z.string().optional(), // deprecated — use TURNSTILE_SECRET_KEY
   WHISH_MERCHANT_ID: z.string().optional(),
   WHISH_API_KEY: z.string().optional(),
   WHISH_API_URL: z.string().url().optional(),

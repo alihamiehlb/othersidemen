@@ -12,7 +12,7 @@ import { configurePassport } from './config/passport.js'
 import { getRedisClient } from './config/redis.js'
 import { csrfProtection, generateCsrfToken } from './middleware/csrf.js'
 import { errorHandler } from './middleware/errorHandler.js'
-import { globalLimiter } from './middleware/rateLimit.js'
+import { globalLimiter, healthLimiter } from './middleware/rateLimit.js'
 import { adminRouter } from './routes/admin/index.js'
 import { authRouter } from './routes/auth.js'
 import { cartRouter } from './routes/cart.js'
@@ -30,7 +30,7 @@ app.use(helmet({
   contentSecurityPolicy: env.NODE_ENV === 'production' ? undefined : false,
   crossOriginEmbedderPolicy: false,
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-  hsts: env.NODE_ENV === 'production' ? { maxAge: 31536000, includeSubDomains: true } : false,
+  hsts: env.NODE_ENV === 'production' ? { maxAge: 31536000, includeSubDomains: true, preload: true } : false,
 }))
 
 app.use(cors({
@@ -56,7 +56,7 @@ app.use(hpp())
 configurePassport()
 app.use(passport.initialize())
 
-app.use('/api/health', healthRouter)
+app.use('/api/health', healthLimiter, healthRouter)
 
 app.get('/api/csrf-token', (req, res) => {
   const token = generateCsrfToken(req, res)

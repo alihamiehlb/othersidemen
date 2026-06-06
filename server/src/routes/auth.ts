@@ -99,11 +99,19 @@ authRouter.post('/signup', authLimiter, verifyRecaptcha, async (req, res) => {
   }
 
   const passwordHash = await bcrypt.hash(password, 12)
+
+  // Only grant admin role when the email matches ADMIN_EMAIL AND no admin account
+  // exists yet (first-run bootstrap). After the admin account is created, new
+  // signups with that email are impossible (unique constraint above), so this
+  // path cannot be triggered again — preventing privilege escalation.
+  const isBootstrapAdmin = Boolean(env.ADMIN_EMAIL && email === env.ADMIN_EMAIL)
+  const role = isBootstrapAdmin ? 'admin' : 'user'
+
   const user = await User.create({
     email,
     name,
     passwordHash,
-    role: env.ADMIN_EMAIL && email === env.ADMIN_EMAIL ? 'admin' : 'user',
+    role,
   })
 
   const token = signToken({ userId: user.id, email: user.email, role: user.role })

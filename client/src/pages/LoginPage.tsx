@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { Logo } from '@/components/ui/Logo'
 import { useAuth } from '@/contexts/AuthContext'
 import { api } from '@/lib/api'
-import { useRecaptcha } from '@/hooks/useRecaptcha'
+import { useTurnstile } from '@/hooks/useTurnstile'
 
 export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | 'signup' }) {
   const { login, signup } = useAuth()
@@ -17,7 +17,7 @@ export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | '
   const [error, setError] = useState(params.get('error') === 'auth_failed' ? 'Google sign-in failed' : '')
   const [loading, setLoading] = useState(false)
   const [googleEnabled, setGoogleEnabled] = useState(true)
-  const { getToken } = useRecaptcha(mode === 'login' ? 'login' : 'signup')
+  const { containerRef: turnstileRef, getToken, enabled: turnstileEnabled } = useTurnstile(mode === 'login' ? 'login' : 'signup')
 
   useEffect(() => {
     if (params.get('mode') === 'signup') setMode('signup')
@@ -117,6 +117,8 @@ export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | '
           />
 
           {error && <p className="text-sm text-red-400">{error}</p>}
+
+          {turnstileEnabled && <div ref={turnstileRef} className="sr-only" aria-hidden="true" />}
 
           <Button type="submit" variant="solid" fullWidth disabled={loading}>
             {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
