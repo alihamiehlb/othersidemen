@@ -77,8 +77,8 @@ app.get('/api', (_req, res) => {
 app.use(errorHandler)
 
 async function start() {
-  app.listen(env.PORT, () => {
-    console.log(`[server] Running on http://localhost:${env.PORT}`)
+  app.listen(env.PORT, '0.0.0.0', () => {
+    console.log(`[server] Running on http://0.0.0.0:${env.PORT}`)
   }).on('error', (err: NodeJS.ErrnoException) => {
     if (err.code === 'EADDRINUSE') {
       console.error(`[server] Port ${env.PORT} already in use. Run: npm run dev:clean`)
