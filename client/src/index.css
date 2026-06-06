@@ -117,6 +117,22 @@
   [data-theme="light"] .from-black\/90 {
     --tw-gradient-from: rgb(255 255 255 / 0.95);
   }
+
+  .hero-overlay-dark {
+    background: linear-gradient(to top, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.45), transparent);
+  }
+
+  .hero-overlay-light {
+    background: linear-gradient(to top, rgb(255 255 255 / 0.92), rgb(255 255 255 / 0.5), transparent);
+  }
+
+  .hero-fade-dark {
+    background: linear-gradient(to top, rgb(0 0 0), rgb(0 0 0 / 0.5), transparent);
+  }
+
+  .hero-fade-light {
+    background: linear-gradient(to top, rgb(255 255 255), rgb(255 255 255 / 0.55), transparent);
+  }
 }
 
 @keyframes product-fade-up {

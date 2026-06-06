@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
+import { useTheme } from '@/contexts/ThemeContext'
 import { resolveImage } from '@/utils/resolveImage'
 
 const HERO_DESKTOP = resolveImage('hero.model')
@@ -9,17 +10,25 @@ const HERO_MOBILE = resolveImage('hero.modelMobile')
 
 export function HeroSection() {
   const [loaded, setLoaded] = useState(false)
+  const { theme } = useTheme()
+  const isLight = theme === 'light'
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden pt-16" aria-label="Hero">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0d0d0d]">
+      <div
+        className={`absolute inset-0 ${
+          isLight
+            ? 'bg-gradient-to-br from-[#f7f7f7] via-[#ececec] to-[#fafafa]'
+            : 'bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0d0d0d]'
+        }`}
+      >
         {HERO_DESKTOP && (
           <picture>
             <source media="(max-width: 768px)" srcSet={HERO_MOBILE ?? HERO_DESKTOP} />
             <img
               src={HERO_DESKTOP}
               alt="OTHER SIDE Men — dark and light streetwear"
-              className={`h-full w-full object-cover object-[50%_38%] transition-opacity duration-700 sm:object-[50%_35%] lg:object-[50%_32%] ${loaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`h-full w-full object-cover object-[50%_38%] transition-opacity duration-700 sm:object-[50%_35%] lg:object-[50%_32%] ${loaded ? 'opacity-100' : 'opacity-0'} ${isLight ? 'brightness-[1.03] contrast-[0.98]' : ''}`}
               fetchPriority="high"
               decoding="async"
               onLoad={() => setLoaded(true)}
@@ -27,11 +36,30 @@ export function HeroSection() {
           </picture>
         )}
 
-        <div className="absolute top-0 bottom-0 left-0 hidden w-[42%] max-w-xl bg-gradient-to-r from-black/35 via-black/10 to-transparent lg:block" aria-hidden="true" />
-        <div className="absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-black/90 via-black/45 to-transparent lg:hidden" aria-hidden="true" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black via-black/50 to-transparent sm:h-40" aria-hidden="true" />
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/50 to-transparent" aria-hidden="true" />
-        <div className="absolute top-0 bottom-0 left-1/2 hidden w-px -translate-x-1/2 bg-white/10 lg:block" aria-hidden="true" />
+        <div
+          className={`absolute top-0 bottom-0 left-0 hidden w-[42%] max-w-xl lg:block ${
+            isLight
+              ? 'bg-gradient-to-r from-white/55 via-white/20 to-transparent'
+              : 'bg-gradient-to-r from-black/35 via-black/10 to-transparent'
+          }`}
+          aria-hidden="true"
+        />
+        <div
+          className={`hero-mobile-overlay absolute inset-x-0 bottom-0 h-[70%] lg:hidden ${isLight ? 'hero-overlay-light' : 'hero-overlay-dark'}`}
+          aria-hidden="true"
+        />
+        <div
+          className={`hero-bottom-fade absolute inset-x-0 bottom-0 h-32 sm:h-40 ${isLight ? 'hero-fade-light' : 'hero-fade-dark'}`}
+          aria-hidden="true"
+        />
+        <div
+          className={`absolute inset-x-0 top-0 h-20 ${isLight ? 'bg-gradient-to-b from-white/70 to-transparent' : 'bg-gradient-to-b from-black/50 to-transparent'}`}
+          aria-hidden="true"
+        />
+        <div
+          className={`absolute top-0 bottom-0 left-1/2 hidden w-px -translate-x-1/2 lg:block ${isLight ? 'bg-black/10' : 'bg-white/10'}`}
+          aria-hidden="true"
+        />
       </div>
 
       <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col justify-end lg:grid lg:grid-cols-2 lg:justify-center">
@@ -51,7 +79,7 @@ export function HeroSection() {
             <Link to="/shop">
               <Button variant="solid" className="w-full min-[400px]:w-auto">Shop Men&apos;s Collection</Button>
             </Link>
-            <Link to="/shop">
+            <Link to="/shop?category=looks">
               <Button variant="outline" className="w-full min-[400px]:w-auto">New Arrivals</Button>
             </Link>
           </div>

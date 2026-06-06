@@ -1,8 +1,11 @@
 import type { ProductCardData } from '@/components/ui/ProductCard'
 
 export interface CatalogPreview {
+  generatedAt: string
+  total?: number
   looks: ProductCardData[]
   styleDna: ProductCardData[]
+  all?: ProductCardData[]
 }
 
 let cache: CatalogPreview | null = null
@@ -19,15 +22,28 @@ export async function loadCatalogPreview(): Promise<CatalogPreview | null> {
   }
 }
 
+function productPool(preview: CatalogPreview, category: string | undefined): ProductCardData[] {
+  const all = preview.all ?? preview.looks
+  if (!category || category === 'all') return all
+  return all.filter((p) => p.category === category)
+}
+
 export function previewProducts(
   preview: CatalogPreview | null,
   category: string | undefined,
   limit: number,
+  page = 1,
 ): ProductCardData[] {
   if (!preview) return []
-  const pool =
-    !category || category === 'all' || category === 'looks'
-      ? preview.looks
-      : preview.looks.filter((p) => p.category === category)
-  return pool.slice(0, limit)
+  const pool = productPool(preview, category)
+  const start = (page - 1) * limit
+  return pool.slice(start, start + limit)
+}
+
+export function previewProductTotal(
+  preview: CatalogPreview | null,
+  category: string | undefined,
+): number {
+  if (!preview) return 0
+  return productPool(preview, category).length
 }

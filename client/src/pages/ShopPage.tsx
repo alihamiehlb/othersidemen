@@ -11,7 +11,7 @@ import { ProductModal } from '@/components/ui/ProductModal'
 import { SeoHead } from '@/components/seo/SeoHead'
 import { useProductModal } from '@/hooks/useProductModal'
 import { api } from '@/lib/api'
-import { loadCatalogPreview, previewProducts } from '@/lib/catalogPreview'
+import { loadCatalogPreview, previewProducts, previewProductTotal } from '@/lib/catalogPreview'
 
 const CATEGORIES = ['all', 'looks', 'outerwear', 'tops', 'bottoms', 'footwear', 'accessories'] as const
 
@@ -54,12 +54,12 @@ export function ShopPage() {
       return true
     }
 
-    if (replace && pageNum === 1) {
+    if (replace || pageNum === 1) {
       const preview = await loadCatalogPreview()
-      const fallback = previewProducts(preview, cat === 'all' ? undefined : cat, PAGE_SIZE)
+      const fallback = previewProducts(preview, cat === 'all' ? undefined : cat, PAGE_SIZE, pageNum)
       if (fallback.length) {
-        setTotal(fallback.length)
-        setProducts(fallback)
+        setTotal(previewProductTotal(preview, cat === 'all' ? undefined : cat))
+        setProducts((prev) => (replace ? fallback : [...prev, ...fallback]))
         return true
       }
     }
@@ -132,7 +132,7 @@ export function ShopPage() {
             className={`px-4 py-2 text-[10px] font-semibold uppercase tracking-widest transition-colors ${
               category === cat
                 ? 'bg-brand-white text-brand-black'
-                : 'border border-white/20 text-brand-muted hover:border-white/40 hover:text-brand-white'
+                : 'border border-theme-subtle text-brand-muted hover:text-brand-white'
             }`}
           >
             {cat === 'all' ? 'All' : cat}
