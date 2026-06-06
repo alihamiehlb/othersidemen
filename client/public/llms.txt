@@ -1,0 +1,36 @@
+# OTHER SIDE — Men's Fashion E-Commerce (llms.txt)
+
+> Two sides. One identity. Premium men's streetwear — Otherside Men catalog.
+
+## About
+OTHER SIDE is a men-only fashion e-commerce store (Lebanon / worldwide shipping). Catalog of 791+ looks imported from Otherside Men Instagram archive.
+
+## Public pages
+- Home: /
+- Shop (791 products, infinite scroll): /shop
+- Product detail: /product/:slug
+- Cart: /cart (checkout requires sign-in)
+- Account: /login, /signup, /account
+- Legal: /privacy, /terms, /cookies, /security-policy, /shipping, /faq, /contact, /about
+
+## Admin (disallow bots)
+- /admin — requires admin role (not indexed)
+
+## Product data
+- Categories: looks, tops, bottoms, outerwear, footwear, accessories
+- Images: static WebP at /images/catalog/{category}/{slug}.webp (bundled with site CDN)
+- Prices in USD; payments: COD, WhatsApp, Whish Pay (Lebanon)
+
+## API (backend, not for crawling)
+- Base: configured via VITE_API_URL in production
+- Health: GET /api/health
+- Auth: email/password + Google OAuth
+
+## Tech stack
+- Frontend: React 19, Vite, Tailwind v4, Cloudflare Pages
+- Backend: Express, MongoDB Atlas, Upstash Redis
+- Security: CSRF, JWT httpOnly cookies, rate limits, helmet headers
+
+## Contact
+- Security: /.well-known/security.txt
+- Support: /contact

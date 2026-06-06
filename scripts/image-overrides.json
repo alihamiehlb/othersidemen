@@ -1,0 +1,29 @@
+{
+  "products": {
+    "utility-puffer-jacket": "2024-12-24_None/03.jpg",
+    "oversized-hoodie": "2025-04-02_None/01.jpg",
+    "cargo-pants": "2025-10-23_None/02.jpg",
+    "high-top-sneakers": "2024-04-17_None/05.jpg",
+    "bomber-jacket": "2024-01-18_None/01.jpg",
+    "crossbody-bag": "2023-12-18_None/01.jpg"
+  },
+  "outfitBuilder": {
+    "top-1": "2025-06-03_None/01.jpg",
+    "top-2": "2025-04-02_None/02.jpg",
+    "top-3": "2025-03-18_None/01.jpg",
+    "top-4": "2024-04-07_None/01.jpg",
+    "bottom-1": "2025-10-23_None/04.jpg",
+    "bottom-2": "2024-06-22_None/01.jpg",
+    "bottom-3": "2026-03-25_None/01.jpg",
+    "bottom-4": "2025-03-18_None/03.jpg",
+    "outer-1": "2024-12-24_None/04.jpg",
+    "outer-2": "2024-01-18_None/02.jpg",
+    "outer-3": "2024-12-07_None/02.jpg",
+    "outer-4": "2024-01-13_None/02.jpg",
+    "foot-1": "2024-04-17_None/05.jpg",
+    "foot-2": "2024-12-23_None/05.jpg",
+    "foot-3": "2024-12-23_None/02.jpg",
+    "foot-4": "2024-04-17_None/03.jpg"
+  },
+  "outfitPreview": "2024-12-24_None/01.jpg"
+}

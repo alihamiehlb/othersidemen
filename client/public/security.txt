@@ -1,0 +1,5 @@
+Contact: mailto:security@otherside.com
+Expires: 2027-06-05T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://otherside.com/.well-known/security.txt
+Policy: https://otherside.com/security-policy

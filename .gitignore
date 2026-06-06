@@ -1,0 +1,41 @@
+node_modules/
+dist/
+build/
+
+# Secrets — never commit (local env only)
+.env
+.env.*
+!.env.example
+!.env.production.example
+server/.env
+server/.env.local
+client/.env
+client/.env.*
+!client/.env.example
+*.pem
+*.key
+*.p12
+credentials.json
+secrets.json
+**/service-account*.json
+
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+coverage/
+*.tsbuildinfo
+
+# Keep the images directory but ignore temp uploads; allow processed WebP assets
+client/public/images/*
+!client/public/images/.gitkeep
+!client/public/images/**/*.webp
+!client/public/images/**/*.png
+!client/public/images/catalog/**
+
+# Local image processing (large — do not commit)
+.tmp-extract/
+otherside.men.zip
+hero.jpeg
+hero.png

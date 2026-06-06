@@ -1,0 +1,197 @@
+{
+  "generatedAt": "2026-06-06T15:16:16.968Z",
+  "totalSourceImages": 791,
+  "products": {
+    "utility-puffer-jacket": {
+      "path": "/images/products/utility-puffer-jacket.webp",
+      "source": "2024-12-24_None/03.jpg",
+      "manual": true
+    },
+    "cargo-pants": {
+      "path": "/images/products/cargo-pants.webp",
+      "source": "2025-10-23_None/02.jpg",
+      "manual": true
+    },
+    "high-top-sneakers": {
+      "path": "/images/products/high-top-sneakers.webp",
+      "source": "2024-04-17_None/05.jpg",
+      "manual": true
+    },
+    "bomber-jacket": {
+      "path": "/images/products/bomber-jacket.webp",
+      "source": "2024-01-18_None/01.jpg",
+      "manual": true
+    },
+    "crossbody-bag": {
+      "path": "/images/products/crossbody-bag.webp",
+      "source": "2023-12-18_None/01.jpg",
+      "manual": true
+    },
+    "oversized-hoodie": {
+      "path": "/images/products/oversized-hoodie.webp",
+      "source": "2025-04-02_None/01.jpg",
+      "manual": true
+    }
+  },
+  "lookbook": {
+    "winterLayers": {
+      "path": "/images/lookbook/winter-layers.webp",
+      "source": "2024-12-07_None/02.jpg",
+      "caption": "Layered perfection! Quilted coat to take any outfit to the next level. #winterstyle #mensfashion"
+    },
+    "cityEssentials": {
+      "path": "/images/lookbook/city-essentials.webp",
+      "source": "2025-01-06_None/03.jpg",
+      "caption": "Layer up in style with a bold mix of textures and camo prints. Functional outerwear meets urban edge."
+    },
+    "offDutyLooks": {
+      "path": "/images/lookbook/off-duty.webp",
+      "source": "2025-04-02_None/01.jpg",
+      "caption": "Our Limited Edition Relaxed Set #OthersideMen #SS25"
+    },
+    "eveningRefined": {
+      "path": "/images/lookbook/evening-refined.webp",
+      "source": "2026-03-25_None/01.jpg",
+      "caption": "Tailored for the spring mood.#otherside"
+    },
+    "weekendEscape": {
+      "path": "/images/lookbook/weekend-escape.webp",
+      "source": "2023-12-15_None/01.jpg",
+      "caption": "Let your style do all the speaking with our new WINTER COLLECTION that’s now available in store & online for orders!"
+    }
+  },
+  "styleDna": {
+    "minimal": {
+      "path": "/images/style-dna/minimal.webp",
+      "source": "2024-12-24_None/01.jpg",
+      "caption": "Effortlessly cool vibes with this oversized puffer in bold turquoise – perfect for standing out while staying cozy. Pair it with versatile grey cargo pants and crisp white sneakers for a balanced streetwear look. 🖤💙"
+    },
+    "street": {
+      "path": "/images/style-dna/street.webp",
+      "source": "2025-01-06_None/02.jpg",
+      "caption": "Layer up in style with a bold mix of textures and camo prints. Functional outerwear meets urban edge."
+    },
+    "creative": {
+      "path": "/images/style-dna/creative.webp",
+      "source": "2024-04-07_None/01.jpg",
+      "caption": "Combining timeless classics with innovative designs is an art of itself. Shop our uniquely designed patterned shirts today"
+    },
+    "classic": {
+      "path": "/images/style-dna/classic.webp",
+      "source": "2024-04-07_None/03.jpg",
+      "caption": "Combining timeless classics with innovative designs is an art of itself. Shop our uniquely designed patterned shirts today"
+    },
+    "tech": {
+      "path": "/images/style-dna/tech.webp",
+      "source": "2025-01-06_None/01.jpg",
+      "caption": "Layer up in style with a bold mix of textures and camo prints. Functional outerwear meets urban edge."
+    }
+  },
+  "hero": {
+    "path": "/images/hero.webp",
+    "source": "hero.jpeg (project root)"
+  },
+  "assignments": [
+    {
+      "type": "product",
+      "target": "utility-puffer-jacket",
+      "source": "2024-12-24_None/04.jpg",
+      "caption": "Effortlessly cool vibes with this oversized puffer in bold turquoise – perfect for standing out while staying cozy. Pair it with versatile grey cargo pants and crisp white sneakers for a balanced streetwear look. 🖤💙"
+    },
+    {
+      "type": "product",
+      "target": "cargo-pants",
+      "source": "2024-12-24_None/05.jpg",
+      "caption": "Effortlessly cool vibes with this oversized puffer in bold turquoise – perfect for standing out while staying cozy. Pair it with versatile grey cargo pants and crisp white sneakers for a balanced streetwear look. 🖤💙"
+    },
+    {
+      "type": "product",
+      "target": "high-top-sneakers",
+      "source": "2024-12-24_None/03.jpg",
+      "caption": "Effortlessly cool vibes with this oversized puffer in bold turquoise – perfect for standing out while staying cozy. Pair it with versatile grey cargo pants and crisp white sneakers for a balanced streetwear look. 🖤💙"
+    },
+    {
+      "type": "product",
+      "target": "bomber-jacket",
+      "source": "2024-01-18_None/01.jpg",
+      "caption": "With or without the blazer jacket. Which look would you wear?"
+    },
+    {
+      "type": "product",
+      "target": "crossbody-bag",
+      "source": "2024-02-02_None/02.jpg",
+      "caption": "This is where quality meets style!"
+    }
+  ],
+  "outfitBuilder": {
+    "top-1": {
+      "path": "/images/outfit-builder/top-1.webp",
+      "source": "2025-06-03_None/01.jpg"
+    },
+    "top-2": {
+      "path": "/images/outfit-builder/top-2.webp",
+      "source": "2025-04-02_None/02.jpg"
+    },
+    "top-3": {
+      "path": "/images/outfit-builder/top-3.webp",
+      "source": "2025-03-18_None/01.jpg"
+    },
+    "top-4": {
+      "path": "/images/outfit-builder/top-4.webp",
+      "source": "2024-04-07_None/01.jpg"
+    },
+    "bottom-1": {
+      "path": "/images/outfit-builder/bottom-1.webp",
+      "source": "2025-10-23_None/04.jpg"
+    },
+    "bottom-2": {
+      "path": "/images/outfit-builder/bottom-2.webp",
+      "source": "2024-06-22_None/01.jpg"
+    },
+    "bottom-3": {
+      "path": "/images/outfit-builder/bottom-3.webp",
+      "source": "2026-03-25_None/01.jpg"
+    },
+    "bottom-4": {
+      "path": "/images/outfit-builder/bottom-4.webp",
+      "source": "2025-03-18_None/03.jpg"
+    },
+    "outer-1": {
+      "path": "/images/outfit-builder/outer-1.webp",
+      "source": "2024-12-24_None/04.jpg"
+    },
+    "outer-2": {
+      "path": "/images/outfit-builder/outer-2.webp",
+      "source": "2024-01-18_None/02.jpg"
+    },
+    "outer-3": {
+      "path": "/images/outfit-builder/outer-3.webp",
+      "source": "2024-12-07_None/02.jpg"
+    },
+    "outer-4": {
+      "path": "/images/outfit-builder/outer-4.webp",
+      "source": "2024-01-13_None/02.jpg"
+    },
+    "foot-1": {
+      "path": "/images/outfit-builder/foot-1.webp",
+      "source": "2024-04-17_None/05.jpg"
+    },
+    "foot-2": {
+      "path": "/images/outfit-builder/foot-2.webp",
+      "source": "2024-12-23_None/05.jpg"
+    },
+    "foot-3": {
+      "path": "/images/outfit-builder/foot-3.webp",
+      "source": "2024-12-23_None/02.jpg"
+    },
+    "foot-4": {
+      "path": "/images/outfit-builder/foot-4.webp",
+      "source": "2024-04-17_None/03.jpg"
+    },
+    "preview": {
+      "path": "/images/outfit-builder/preview.webp",
+      "source": "2024-12-24_None/01.jpg"
+    }
+  },
+  "note": "791 photos in zip; 18 curated for storefront UI (6 products + 5 lookbook + 5 style DNA + hero + outfit builder). Run process-images to regenerate lookbook/style from captions."
+}

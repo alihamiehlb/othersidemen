@@ -1,0 +1,12 @@
+# OTHER SIDE — security contact (RFC 9116)
+# Update Contact and Policy URLs before production launch.
+
+Contact: mailto:security@otherside.com
+Contact: mailto:support@otherside.com
+Expires: 2027-06-05T00:00:00.000Z
+Preferred-Languages: en, ar
+Canonical: https://otherside.com/.well-known/security.txt
+Policy: https://otherside.com/security-policy
+Hiring: https://otherside.com/contact
+
+# Acknowledgments: we appreciate responsible disclosure. Do not test on production without permission.

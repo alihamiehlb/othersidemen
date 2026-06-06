@@ -1,0 +1,35 @@
+{
+  "name": "twoside-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OTHER SIDE — fashion e-commerce platform",
+  "workspaces": [
+    "client",
+    "server",
+    "cloudflare/api"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\"",
+    "dev:clean": "powershell -ExecutionPolicy Bypass -File scripts/kill-ports.ps1",
+    "dev:fresh": "npm run dev:clean && npm run dev",
+    "dev:client": "npm run dev -w client",
+    "dev:server": "npm run dev -w server",
+    "build": "npm run build -w client && npm run build -w server",
+    "build:client": "npm run build -w client",
+    "build:server": "npm run build -w server",
+    "deploy:pages": "npm run build:client && npx wrangler pages deploy client/dist --project-name=twoside-store",
+    "deploy:api": "npm run deploy -w twoside-api-worker",
+    "start": "npm run start -w server",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "process-images": "node scripts/process-images.mjs && node scripts/sync-images-config.mjs",
+    "fix-images": "node scripts/apply-image-overrides.mjs && node scripts/sync-images-config.mjs",
+    "import-catalog": "node scripts/import-catalog.mjs",
+    "import-catalog:db": "npm run import-catalog -w server",
+    "update-images": "npm run update-images -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "wrangler": "^4.24.0"
+  }
+}

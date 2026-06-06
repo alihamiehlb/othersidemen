@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /account
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+Disallow: /order/
+
+# Update Sitemap URL when your domain is live
+Sitemap: https://otherside.com/sitemap.xml
