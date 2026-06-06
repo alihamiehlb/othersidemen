@@ -77,7 +77,15 @@ app.get('/api', (_req, res) => {
 app.use(errorHandler)
 
 async function start() {
-  await connectDB()
+  app.listen(env.PORT, () => {
+    console.log(`[server] Running on http://localhost:${env.PORT}`)
+  }).on('error', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`[server] Port ${env.PORT} already in use. Run: npm run dev:clean`)
+      process.exit(1)
+    }
+    throw err
+  })
 
   const redis = getRedisClient()
   if (redis) {
@@ -88,15 +96,11 @@ async function start() {
     }
   }
 
-  app.listen(env.PORT, () => {
-    console.log(`[server] Running on http://localhost:${env.PORT}`)
-  }).on('error', (err: NodeJS.ErrnoException) => {
-    if (err.code === 'EADDRINUSE') {
-      console.error(`[server] Port ${env.PORT} already in use. Run: npm run dev:clean`)
-      process.exit(1)
-    }
-    throw err
-  })
+  try {
+    await connectDB()
+  } catch (err) {
+    console.error('[mongodb] Initial connection failed — API will serve degraded until Atlas is reachable:', err)
+  }
 }
 
 start()
