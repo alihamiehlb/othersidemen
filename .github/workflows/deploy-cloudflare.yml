@@ -1,103 +1,102 @@
-name: Deploy to Cloudflare
-
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-
-concurrency:
-  group: cloudflare-deploy
-  cancel-in-progress: true
-
-env:
-  PAGES_PROJECT: twoside-store
-  NODE_VERSION: '22'
-
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - name: Install dependencies
-        run: |
-          npm ci --include=optional
-          npm install @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu --workspace=client --no-save
-
-      - name: Build server
-        run: npm run build:server
-
-      - name: Sync catalog images
-        run: node scripts/sync-catalog-images.mjs
-        env:
-          CATALOG_CDN_SOURCE: https://03fee126.twoside-store.pages.dev
-
-      - name: Build client
-        run: npm run build:client
-        env:
-          VITE_API_URL: ''
-          VITE_CDN_URL: ''
-          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
-          VITE_WHATSAPP_NUMBER: ${{ secrets.VITE_WHATSAPP_NUMBER }}
-
-      - name: Upload Pages artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pages-dist
-          path: client/dist
-          retention-days: 1
-
-  deploy-pages:
-    name: Deploy frontend (Pages CDN)
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: read
-      deployments: write
-    steps:
-      - name: Download Pages artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: pages-dist
-          path: client/dist
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy client/dist --project-name=${{ env.PAGES_PROJECT }} --branch=main
-
-  deploy-api:
-    name: Deploy API (Workers Container)
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install API worker dependencies
-        working-directory: cloudflare/api
-        run: npm install
-
-      - name: Deploy API container
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: cloudflare/api
-          command: deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cloudflare-deploy
+  cancel-in-progress: true
+
+env:
+  PAGES_PROJECT: twoside-store
+  NODE_VERSION: '22'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          npm ci --include=optional
+          npm install @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu --workspace=client --no-save
+
+      - name: Build server
+        run: npm run build:server
+
+      - name: Sync catalog images
+        run: node scripts/sync-catalog-images.mjs
+        env:
+          CATALOG_CDN_SOURCE: https://03fee126.twoside-store.pages.dev
+
+      - name: Build client
+        run: npm run build:client
+        env:
+          VITE_API_URL: ''
+          VITE_CDN_URL: ''
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-dist
+          path: client/dist
+          retention-days: 1
+
+  deploy-pages:
+    name: Deploy frontend (Pages CDN)
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Download Pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-dist
+          path: client/dist
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy client/dist --project-name=${{ env.PAGES_PROJECT }} --branch=main
+
+  deploy-api:
+    name: Deploy API (Workers Container)
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install API worker dependencies
+        working-directory: cloudflare/api
+        run: npm install
+
+      - name: Deploy API container
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: cloudflare/api
+          command: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 

@@ -18,7 +18,8 @@ const envSchema = z.object({
   RECAPTCHA_SECRET_KEY: z.string().optional(), // deprecated — use TURNSTILE_SECRET_KEY
   WHISH_MERCHANT_ID: z.string().optional(),
   WHISH_API_KEY: z.string().optional(),
-  WHISH_API_URL: z.string().url().optional(),
+  WHISH_API_URL: z.preprocess((v) => (v === '' ? undefined : v), z.string().url().optional()),
+  WHATSAPP_NUMBER: z.string().optional(),
 })
 
 export type Env = z.infer<typeof envSchema>

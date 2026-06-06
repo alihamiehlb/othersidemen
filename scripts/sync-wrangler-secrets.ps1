@@ -7,8 +7,8 @@
 
 param(
   [string]$EnvFile = "server/.env",
-  [string]$PagesUrl = "",
-  [string]$ApiUrl = "",
+  [string]$PagesUrl = "https://twoside-store.pages.dev",
+  [string]$ApiUrl = "https://twoside-store-api.alihamiehlb.workers.dev",
   [string]$WorkerDir = "cloudflare/api"
 )
 
@@ -38,12 +38,16 @@ function Read-DotEnv([string]$Path) {
 
 $envMap = Read-DotEnv $EnvFile
 
+# Same-origin via Pages /api proxy — cookies + CSRF + Google OAuth must use the store URL
 if ($PagesUrl) {
   $envMap["CORS_ORIGIN"] = $PagesUrl
   $envMap["CLIENT_URL"] = $PagesUrl
+  $envMap["GOOGLE_CALLBACK_URL"] = "$PagesUrl/api/auth/google/callback"
 }
-if ($ApiUrl) {
-  $envMap["GOOGLE_CALLBACK_URL"] = "$ApiUrl/api/auth/google/callback"
+
+# WhatsApp phone lives on the server (not VITE_* client bundle)
+if ($envMap.ContainsKey("VITE_WHATSAPP_NUMBER") -and -not $envMap.ContainsKey("WHATSAPP_NUMBER")) {
+  $envMap["WHATSAPP_NUMBER"] = $envMap["VITE_WHATSAPP_NUMBER"]
 }
 
 $secretKeys = @(
@@ -57,7 +61,8 @@ $secretKeys = @(
   "GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",
   "GOOGLE_CALLBACK_URL",
-  "TURNSTILE_SECRET_KEY"
+  "TURNSTILE_SECRET_KEY",
+  "WHATSAPP_NUMBER"
 )
 
 Push-Location $WorkerDir
@@ -74,6 +79,10 @@ try {
     }
   }
   Write-Host "All secrets synced."
+  Write-Host ""
+  Write-Host "Google Console must include:"
+  Write-Host "  JS origin:      $PagesUrl"
+  Write-Host "  Redirect URI:   $($envMap['GOOGLE_CALLBACK_URL'])"
 }
 finally {
   Pop-Location

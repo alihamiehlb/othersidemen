@@ -79,9 +79,12 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
     }
     setAdding(true)
     setMessage('')
-    const err = await addItem(product!._id, 1, size, color)
-    setAdding(false)
-    setMessage(err ?? 'Added to bag')
+    try {
+      const err = await addItem(product!._id, 1, size, color)
+      setMessage(err ?? 'Added to bag')
+    } finally {
+      setAdding(false)
+    }
   }
 
   return createPortal(
@@ -187,8 +190,6 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
               {whatsappUrl ? (
                 <a
                   href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 border border-[#25D366]/40 bg-[#25D366]/10 px-6 py-3 text-xs font-semibold uppercase tracking-widest text-[#25D366] transition-colors hover:bg-[#25D366]/20"
                 >
                   <MessageCircle size={16} />

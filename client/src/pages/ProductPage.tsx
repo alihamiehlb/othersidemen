@@ -165,8 +165,6 @@ export function ProductPage() {
         {whatsappUrl && (
           <a
             href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             className="mt-3 inline-flex items-center justify-center gap-2 border border-[#25D366]/40 bg-[#25D366]/10 px-6 py-3 text-xs font-semibold uppercase tracking-widest text-[#25D366] hover:bg-[#25D366]/20"
           >
             <MessageCircle size={16} />

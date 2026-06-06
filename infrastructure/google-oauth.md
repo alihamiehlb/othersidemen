@@ -29,24 +29,24 @@ Click **+ Add URI** and add:
 http://localhost:5173
 ```
 
-Production (when you deploy):
+Production (same-origin via Pages `/api` proxy):
 
 ```
-https://your-domain.com
+https://twoside-store.pages.dev
 ```
 
 ### Authorized redirect URIs
 
-Click **+ Add URI** and add:
+Dev:
 
 ```
 http://localhost:3001/api/auth/google/callback
 ```
 
-Production:
+Production (**must start with `https://`** — not `//...`):
 
 ```
-https://api.your-domain.com/api/auth/google/callback
+https://twoside-store.pages.dev/api/auth/google/callback
 ```
 
 Click **Create**. Copy the **Client ID** and **Client secret**.
@@ -78,7 +78,8 @@ npm run dev:fresh
 
 | Error | Fix |
 |-------|-----|
-| `redirect_uri_mismatch` | Redirect URI must match **exactly** — include `/api/auth/google/callback` |
+| `redirect_uri_mismatch` | Redirect URI must match **exactly** — use `https://twoside-store.pages.dev/api/auth/google/callback` (include `https://`) |
+| `auth_failed` after Google | `oauth_state` cookie must be same-origin — use Pages URL for callback, not `workers.dev` |
 | `access_blocked` | Add your email as test user on consent screen |
 | Google button hidden | `GOOGLE_CLIENT_ID` / `SECRET` missing in `server/.env` |
 | Cookie not set | Use `npm run dev` (client + server), not `dev:client` alone |
@@ -87,5 +88,5 @@ npm run dev:fresh
 
 - [ ] HTTPS on both site and API
 - [ ] Update JavaScript origins + redirect URIs to production URLs
-- [ ] Set `GOOGLE_CALLBACK_URL` to production API callback
+- [ ] Set `GOOGLE_CALLBACK_URL` to `https://twoside-store.pages.dev/api/auth/google/callback`
 - [ ] Set `CLIENT_URL` and `CORS_ORIGIN` to production frontend URL

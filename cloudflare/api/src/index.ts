@@ -20,6 +20,7 @@ export interface Env {
   WHISH_MERCHANT_ID?: string
   WHISH_API_KEY?: string
   WHISH_API_URL?: string
+  WHATSAPP_NUMBER?: string
 }
 
 /** Runs the Express API Docker image on Cloudflare Containers */
@@ -50,11 +51,13 @@ export class TwosideServer extends Container<Env> {
     if (e.WHISH_MERCHANT_ID) vars.WHISH_MERCHANT_ID = e.WHISH_MERCHANT_ID
     if (e.WHISH_API_KEY) vars.WHISH_API_KEY = e.WHISH_API_KEY
     if (e.WHISH_API_URL) vars.WHISH_API_URL = e.WHISH_API_URL
+    if (e.WHATSAPP_NUMBER) vars.WHATSAPP_NUMBER = e.WHATSAPP_NUMBER
     return vars
   }
 
   override async fetch(request: Request): Promise<Response> {
     await this.startAndWaitForPorts({
+      ports: [3001],
       startOptions: {
         envVars: this.runtimeEnv(),
         enableInternet: true,

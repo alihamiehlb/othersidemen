@@ -20,6 +20,7 @@ import { healthRouter } from './routes/health.js'
 import { ordersRouter } from './routes/orders.js'
 import { paymentsRouter } from './routes/payments.js'
 import { productsRouter } from './routes/products.js'
+import { whatsappRouter } from './routes/whatsapp.js'
 import { sendSuccess } from './utils/apiResponse.js'
 
 const app = express()
@@ -64,6 +65,7 @@ app.get('/api/csrf-token', (req, res) => {
 })
 
 app.use('/api/auth', authRouter)
+app.use('/api/whatsapp', whatsappRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/cart', csrfProtection, cartRouter)
 app.use('/api/payments', paymentsRouter)
@@ -77,14 +79,17 @@ app.get('/api', (_req, res) => {
 app.use(errorHandler)
 
 async function start() {
-  app.listen(env.PORT, '0.0.0.0', () => {
-    console.log(`[server] Running on http://0.0.0.0:${env.PORT}`)
-  }).on('error', (err: NodeJS.ErrnoException) => {
+  const server = app.listen(env.PORT, '0.0.0.0', () => {
+    console.log(`[server] Listening on 0.0.0.0:${env.PORT}`)
+  })
+
+  server.on('error', (err: NodeJS.ErrnoException) => {
     if (err.code === 'EADDRINUSE') {
-      console.error(`[server] Port ${env.PORT} already in use. Run: npm run dev:clean`)
+      console.error(`[server] Port ${env.PORT} already in use`)
       process.exit(1)
     }
-    throw err
+    console.error('[server] Listen error:', err)
+    process.exit(1)
   })
 
   const redis = getRedisClient()
@@ -103,4 +108,11 @@ async function start() {
   }
 }
 
-start()
+process.on('unhandledRejection', (reason) => {
+  console.error('[server] Unhandled rejection:', reason)
+})
+
+start().catch((err) => {
+  console.error('[server] Startup failed:', err)
+  process.exit(1)
+})

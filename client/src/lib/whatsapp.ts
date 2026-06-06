@@ -6,28 +6,14 @@ interface WhatsAppOrder {
   slug: string
 }
 
-export function getWhatsAppNumber(): string | null {
-  const raw = import.meta.env.VITE_WHATSAPP_NUMBER?.trim()
-  if (!raw) return null
-  return raw.replace(/\D/g, '')
-}
-
-export function buildWhatsAppOrderUrl(order: WhatsAppOrder): string | null {
-  const phone = getWhatsAppNumber()
-  if (!phone) return null
-
-  const origin = typeof window !== 'undefined' ? window.location.origin : ''
-  const message = [
-    'Hi OTHER SIDE, I would like to order:',
-    '',
-    `*${order.name}*`,
-    `Size: ${order.size}`,
-    `Color: ${order.color}`,
-    `Price: $${order.price.toFixed(2)}`,
-    origin ? `Link: ${origin}/product/${order.slug}` : '',
-  ]
-    .filter(Boolean)
-    .join('\n')
-
-  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+/** Same-origin API redirect → server builds wa.me URL (phone in Worker secrets). */
+export function buildWhatsAppOrderUrl(order: WhatsAppOrder): string {
+  const params = new URLSearchParams({
+    name: order.name,
+    price: order.price.toFixed(2),
+    size: order.size,
+    color: order.color,
+    slug: order.slug,
+  })
+  return `/api/whatsapp/order?${params.toString()}`
 }
