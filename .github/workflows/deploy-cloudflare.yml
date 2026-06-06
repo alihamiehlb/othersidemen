@@ -56,7 +56,7 @@ jobs:
 
       - name: Install and build client
         run: |
-          npm ci
+          npm ci --include=optional
           npm install @rolldown/binding-linux-x64-gnu lightningcss-linux-x64-gnu --workspace=client --no-save
           npm run build:client
         env:
