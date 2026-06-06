@@ -37,7 +37,7 @@ export function NewInSection() {
         </div>
 
         {loading && <p className="text-sm text-brand-muted">Loading products...</p>}
-        {error && !loading && <p className="text-sm text-red-400">Could not load products. Run npm run dev:fresh</p>}
+        {error && !loading && <p className="text-sm text-red-400">Could not load products. Please try again shortly.</p>}
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {products.map((product, i) => (

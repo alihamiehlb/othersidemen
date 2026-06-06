@@ -198,7 +198,7 @@ export const POLICIES: Record<string, PolicyDocument> = {
       {
         heading: 'Customer support',
         body: [
-          'WhatsApp: set your number in store settings (VITE_WHATSAPP_NUMBER) for order help.',
+          'WhatsApp: contact us via the Order on WhatsApp button on product pages for order help.',
           'Email: support@otherside.com (update to your real address before launch).',
           'Instagram: @othersidemen',
         ],

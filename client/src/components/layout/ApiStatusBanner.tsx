@@ -23,13 +23,13 @@ export function ApiStatusBanner() {
           const parts: string[] = []
           if (services?.mongodb !== 'connected') parts.push('Database offline')
           if (services?.redis === 'error') parts.push('Redis error')
-          setMessage(parts.length ? parts.join(' · ') : 'API degraded — run npm run dev:fresh')
+          setMessage(parts.length ? parts.join(' · ') : 'Some store services are temporarily unavailable.')
           return
         }
 
         setMessage(null)
       } catch {
-        if (!cancelled) setMessage('API server offline — run npm run dev:fresh')
+        if (!cancelled) setMessage('Store is temporarily offline. Please try again in a moment.')
       }
     }
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MessageCircle } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { LoadingScreen } from '@/components/branding/LoadingScreen'
 import { ErrorScreen } from '@/components/branding/ErrorScreen'
@@ -37,6 +38,7 @@ export function ProductPage() {
   const [size, setSize] = useState('')
   const [color, setColor] = useState('')
   const [message, setMessage] = useState('')
+  const [adding, setAdding] = useState(false)
 
   useEffect(() => {
     if (!slug) return
@@ -72,8 +74,14 @@ export function ProductPage() {
       setMessage('Select size and color')
       return
     }
-    const err = await addItem(product!._id, 1, size, color)
-    setMessage(err ?? 'Added to bag')
+    setAdding(true)
+    setMessage('')
+    try {
+      const err = await addItem(product!._id, 1, size, color)
+      setMessage(err ?? 'Added to bag')
+    } finally {
+      setAdding(false)
+    }
   }
 
   return (
@@ -144,7 +152,16 @@ export function ProductPage() {
           </div>
         </div>
 
-        <Button variant="solid" onClick={handleAdd}>Add to Bag</Button>
+        <Button variant="solid" onClick={handleAdd} disabled={adding}>
+          {adding ? (
+            <>
+              <Loader2 size={16} className="animate-spin" aria-hidden />
+              Adding…
+            </>
+          ) : (
+            'Add to Bag'
+          )}
+        </Button>
         {whatsappUrl && (
           <a
             href={whatsappUrl}

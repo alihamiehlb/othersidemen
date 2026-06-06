@@ -1,24 +1,35 @@
-import { lazy, Suspense, type ReactNode } from 'react'
+import { Suspense, type ReactNode } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
 import { LoadingScreen } from '@/components/branding/LoadingScreen'
+import { RouteErrorScreen } from '@/components/branding/RouteErrorScreen'
 import { HomePage } from '@/pages/HomePage'
+import { lazyWithRetry, lazyWithRetryProps } from '@/lib/lazyWithRetry'
 
-const ShopPage = lazy(() => import('@/pages/ShopPage').then((m) => ({ default: m.ShopPage })))
-const ProductPage = lazy(() => import('@/pages/ProductPage').then((m) => ({ default: m.ProductPage })))
-const CartPage = lazy(() => import('@/pages/CartPage').then((m) => ({ default: m.CartPage })))
-const LoginPage = lazy(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })))
-const AccountPage = lazy(() => import('@/pages/AccountPage').then((m) => ({ default: m.AccountPage })))
-const OrderSuccessPage = lazy(() => import('@/pages/OrderSuccessPage').then((m) => ({ default: m.OrderSuccessPage })))
-const OrderFailedPage = lazy(() => import('@/pages/OrderFailedPage').then((m) => ({ default: m.OrderFailedPage })))
-const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })))
-const PolicyRoute = lazy(() => import('@/pages/legal/PolicyRoute').then((m) => ({ default: m.PolicyRoute })))
-const AdminLayout = lazy(() => import('@/pages/admin/AdminLayout').then((m) => ({ default: m.AdminLayout })))
-const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard })))
-const AdminUsers = lazy(() => import('@/pages/admin/AdminUsers').then((m) => ({ default: m.AdminUsers })))
-const AdminProducts = lazy(() => import('@/pages/admin/AdminProducts').then((m) => ({ default: m.AdminProducts })))
-const AdminOrders = lazy(() => import('@/pages/admin/AdminOrders').then((m) => ({ default: m.AdminOrders })))
-const AdminPhotos = lazy(() => import('@/pages/admin/AdminPhotos').then((m) => ({ default: m.AdminPhotos })))
+const ShopPage = lazyWithRetry(() => import('@/pages/ShopPage').then((m) => ({ default: m.ShopPage })))
+const ProductPage = lazyWithRetry(() => import('@/pages/ProductPage').then((m) => ({ default: m.ProductPage })))
+const CartPage = lazyWithRetry(() => import('@/pages/CartPage').then((m) => ({ default: m.CartPage })))
+const LoginPage = lazyWithRetry(() => import('@/pages/LoginPage').then((m) => ({ default: m.LoginPage })))
+const SignupPage = lazyWithRetry(() =>
+  import('@/pages/LoginPage').then((m) => ({
+    default: function SignupPageRoute() {
+      return <m.LoginPage initialMode="signup" />
+    },
+  })),
+)
+const AccountPage = lazyWithRetry(() => import('@/pages/AccountPage').then((m) => ({ default: m.AccountPage })))
+const OrderSuccessPage = lazyWithRetry(() => import('@/pages/OrderSuccessPage').then((m) => ({ default: m.OrderSuccessPage })))
+const OrderFailedPage = lazyWithRetry(() => import('@/pages/OrderFailedPage').then((m) => ({ default: m.OrderFailedPage })))
+const NotFoundPage = lazyWithRetry(() => import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })))
+const PolicyRoute = lazyWithRetryProps<{ slug: string }>(() =>
+  import('@/pages/legal/PolicyRoute').then((m) => ({ default: m.PolicyRoute })),
+)
+const AdminLayout = lazyWithRetry(() => import('@/pages/admin/AdminLayout').then((m) => ({ default: m.AdminLayout })))
+const AdminDashboard = lazyWithRetry(() => import('@/pages/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard })))
+const AdminUsers = lazyWithRetry(() => import('@/pages/admin/AdminUsers').then((m) => ({ default: m.AdminUsers })))
+const AdminProducts = lazyWithRetry(() => import('@/pages/admin/AdminProducts').then((m) => ({ default: m.AdminProducts })))
+const AdminOrders = lazyWithRetry(() => import('@/pages/admin/AdminOrders').then((m) => ({ default: m.AdminOrders })))
+const AdminPhotos = lazyWithRetry(() => import('@/pages/admin/AdminPhotos').then((m) => ({ default: m.AdminPhotos })))
 
 function lazyPage(element: ReactNode) {
   return <Suspense fallback={<LoadingScreen />}>{element}</Suspense>
@@ -28,6 +39,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
+    errorElement: <RouteErrorScreen />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'shop', element: lazyPage(<ShopPage />) },
@@ -36,7 +48,7 @@ export const router = createBrowserRouter([
       { path: 'order/success', element: lazyPage(<OrderSuccessPage />) },
       { path: 'order/failed', element: lazyPage(<OrderFailedPage />) },
       { path: 'login', element: lazyPage(<LoginPage />) },
-      { path: 'signup', element: lazyPage(<LoginPage initialMode="signup" />) },
+      { path: 'signup', element: lazyPage(<SignupPage />) },
       { path: 'account', element: lazyPage(<AccountPage />) },
       { path: 'privacy', element: lazyPage(<PolicyRoute slug="privacy" />) },
       { path: 'terms', element: lazyPage(<PolicyRoute slug="terms" />) },
@@ -54,6 +66,7 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     element: lazyPage(<AdminLayout />),
+    errorElement: <RouteErrorScreen />,
     children: [
       { index: true, element: lazyPage(<AdminDashboard />) },
       { path: 'users', element: lazyPage(<AdminUsers />) },

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { SITE_URL } from '@/config/site'
+import { absoluteAssetUrl } from '@/utils/productImageUrl'
 
 export interface SeoHeadProps {
   title: string
@@ -73,11 +74,11 @@ export function SeoHead({
     upsertMeta('property', 'og:description', description)
     upsertMeta('property', 'og:type', ogType)
     upsertMeta('property', 'og:url', canonical)
-    upsertMeta('property', 'og:image', ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`)
+    upsertMeta('property', 'og:image', absoluteAssetUrl(ogImage))
     upsertMeta('name', 'twitter:card', 'summary_large_image')
     upsertMeta('name', 'twitter:title', fullTitle)
     upsertMeta('name', 'twitter:description', description)
-    upsertMeta('name', 'twitter:image', ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`)
+    upsertMeta('name', 'twitter:image', absoluteAssetUrl(ogImage))
     upsertLink('canonical', canonical)
 
     if (jsonLd) {
@@ -114,11 +115,7 @@ export function buildProductJsonLd(product: {
   category?: string
 }) {
   const image = product.images?.[0]
-  const imageUrl = image
-    ? image.startsWith('http')
-      ? image
-      : `${SITE_URL}${image.startsWith('/') ? image : `/${image}`}`
-    : `${SITE_URL}/images/hero.webp`
+  const imageUrl = absoluteAssetUrl(image)
 
   return {
     '@context': 'https://schema.org',

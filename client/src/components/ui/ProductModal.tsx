@@ -32,6 +32,7 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
   const [size, setSize] = useState('')
   const [color, setColor] = useState('')
   const [message, setMessage] = useState('')
+  const [adding, setAdding] = useState(false)
 
   const sizes = product ? defaultSizes(product.category, product.sizes) : []
   const colors = product ? defaultColors(product.category, product.colors) : []
@@ -76,7 +77,10 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
       setMessage('Select size and color')
       return
     }
+    setAdding(true)
+    setMessage('')
     const err = await addItem(product!._id, 1, size, color)
+    setAdding(false)
     setMessage(err ?? 'Added to bag')
   }
 
@@ -170,8 +174,15 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
             </div>
 
             <div className="mt-auto flex flex-col gap-3">
-              <Button variant="solid" onClick={handleAddToCart} disabled={loading}>
-                Add to Bag
+              <Button variant="solid" onClick={handleAddToCart} disabled={loading || adding}>
+                {adding ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 size={14} className="animate-spin" />
+                    Adding…
+                  </span>
+                ) : (
+                  'Add to Bag'
+                )}
               </Button>
               {whatsappUrl ? (
                 <a
@@ -183,11 +194,7 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
                   <MessageCircle size={16} />
                   Order on WhatsApp
                 </a>
-              ) : (
-                <p className="text-center text-[10px] text-brand-muted">
-                  Set VITE_WHATSAPP_NUMBER for WhatsApp orders
-                </p>
-              )}
+              ) : null}
               <Link
                 to={`/product/${product.slug}`}
                 onClick={onClose}
@@ -205,7 +212,11 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
                   View on Instagram
                 </a>
               )}
-              {message && <p className="text-center text-sm text-brand-muted">{message}</p>}
+              {message && (
+                <p className={`text-center text-sm ${message === 'Added to bag' ? 'text-brand-light' : 'text-brand-muted'}`}>
+                  {message}
+                </p>
+              )}
             </div>
           </div>
         </div>

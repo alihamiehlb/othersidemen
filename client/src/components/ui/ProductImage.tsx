@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
+import { resolveProductImageSrc } from '@/utils/productImageUrl'
 
 interface ProductImageProps {
   src?: string
@@ -17,18 +18,19 @@ export function ProductImage({
   fit = 'cover',
 }: ProductImageProps) {
   const [failed, setFailed] = useState(false)
+  const resolved = resolveProductImageSrc(src)
 
-  if (!src || failed) {
+  if (!resolved || failed) {
     return (
       <div className={containerClassName}>
-        <ImagePlaceholder alt={alt} label={alt} />
+        <ImagePlaceholder alt={alt} />
       </div>
     )
   }
 
   return (
     <img
-      src={src}
+      src={resolved}
       alt={alt}
       loading="lazy"
       decoding="async"

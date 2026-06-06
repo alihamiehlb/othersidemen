@@ -2,6 +2,7 @@ import { Router } from 'express'
 import crypto from 'node:crypto'
 import passport from 'passport'
 import { z } from 'zod'
+import { cookieOptions } from '../config/cookies.js'
 import { env } from '../config/env.js'
 import type { AuthRequest } from '../middleware/auth.js'
 import { requireAuth } from '../middleware/auth.js'
@@ -30,13 +31,7 @@ const loginSchema = z.object({
 })
 
 function setAuthCookie(res: import('express').Response, token: string): void {
-  res.cookie('token', token, {
-    httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    path: '/',
-  })
+  res.cookie('token', token, cookieOptions(7 * 24 * 60 * 60 * 1000))
 }
 
 authRouter.get('/config', (_req, res) => {
@@ -52,13 +47,7 @@ authRouter.get('/google', authLimiter, (req, res, next) => {
     return
   }
   const state = crypto.randomBytes(24).toString('hex')
-  res.cookie('oauth_state', state, {
-    httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 10 * 60 * 1000,
-    path: '/',
-  })
+  res.cookie('oauth_state', state, cookieOptions(10 * 60 * 1000))
   passport.authenticate('google', { scope: ['profile', 'email'], session: false, state })(req, res, next)
 })
 
@@ -149,7 +138,8 @@ authRouter.post('/login', authLimiter, verifyRecaptcha, async (req, res) => {
 })
 
 authRouter.post('/logout', csrfProtection, (_req, res) => {
-  res.clearCookie('token', { path: '/', httpOnly: true, sameSite: 'lax', secure: env.NODE_ENV === 'production' })
+  const cleared = cookieOptions()
+  res.clearCookie('token', { path: '/', httpOnly: true, sameSite: cleared.sameSite, secure: cleared.secure })
   sendSuccess(res, { message: 'Logged out' })
 })
 

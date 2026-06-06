@@ -1,1 +1,5 @@
+# API → Workers (same-origin cookies + CSRF). Must be before SPA fallback.
+/api/*  https://twoside-store-api.alihamiehlb.workers.dev/api/:splat  200
+
+# SPA fallback
 /*    /index.html   200

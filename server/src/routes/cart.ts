@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
+import { cookieOptions } from '../config/cookies.js'
 import type { AuthRequest } from '../middleware/auth.js'
 import { optionalAuth } from '../middleware/auth.js'
 import { policyContextFromAuth, productPublicFilter } from '../policies/accessPolicies.js'
@@ -28,22 +29,10 @@ function resolveAndBindCart(req: AuthRequest, res: import('express').Response): 
 
   // Logged-in users always use user-scoped cart (prevents cart IDOR via cookie swap)
   if (ctx.userId) {
-    res.cookie('cartId', cartKey, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/',
-    })
+    res.cookie('cartId', cartKey, cookieOptions(7 * 24 * 60 * 60 * 1000))
   } else if (!cookieCartId) {
     const guestId = cartKey.replace('guest:', '')
-    res.cookie('cartId', guestId, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/',
-    })
+    res.cookie('cartId', guestId, cookieOptions(7 * 24 * 60 * 60 * 1000))
   }
 
   return cartKey

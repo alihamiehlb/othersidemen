@@ -20,6 +20,7 @@
     "deploy:pages": "npm run build:client && npx wrangler pages deploy client/dist --project-name=twoside-store --commit-dirty=true",
     "deploy:api": "npm run deploy -w twoside-api-worker",
     "deploy:cloudflare": "powershell -ExecutionPolicy Bypass -File scripts/deploy-cloudflare.ps1",
+    "sync:catalog-images": "node scripts/sync-catalog-images.mjs",
     "sync:cloudflare-secrets": "powershell -ExecutionPolicy Bypass -File scripts/sync-wrangler-secrets.ps1 -PagesUrl https://twoside-store.pages.dev -ApiUrl https://twoside-store-api.alihamiehlb.workers.dev",
     "start": "npm run start -w server",
     "docker:up": "docker-compose up -d",

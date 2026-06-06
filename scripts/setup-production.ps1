@@ -19,8 +19,12 @@ Push-Location cloudflare/api
 $TurnstileSecret | npx wrangler secret put TURNSTILE_SECRET_KEY --name twoside-store-api
 Pop-Location
 
+Write-Host "=== Sync catalog images ==="
+node scripts/sync-catalog-images.mjs
+
 Write-Host "=== Build & deploy Pages ==="
-$env:VITE_API_URL = $ApiUrl
+$env:VITE_API_URL = ""
+$env:VITE_CDN_URL = ""
 $env:VITE_TURNSTILE_SITE_KEY = $TurnstileSiteKey
 npm run build:client
 npx wrangler pages deploy client/dist --project-name=twoside-store --branch=main --commit-dirty=true
@@ -35,7 +39,7 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
   if ($LASTEXITCODE -eq 0) {
     gh secret set CLOUDFLARE_API_TOKEN --body $cfToken --repo alihamiehlb/othersidemen
     gh secret set CLOUDFLARE_ACCOUNT_ID --body $AccountId --repo alihamiehlb/othersidemen
-    gh secret set VITE_API_URL --body $ApiUrl --repo alihamiehlb/othersidemen
+    gh secret set VITE_API_URL --body "" --repo alihamiehlb/othersidemen
     gh secret set VITE_TURNSTILE_SITE_KEY --body $TurnstileSiteKey --repo alihamiehlb/othersidemen
     Write-Host "GitHub secrets updated. Triggering deploy workflow..."
     gh workflow run "Deploy to Cloudflare" --repo alihamiehlb/othersidemen --ref main

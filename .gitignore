@@ -26,6 +26,7 @@ Thumbs.db
 .idea/
 coverage/
 *.tsbuildinfo
+.tools/
 
 # Keep the images directory but ignore temp uploads; allow processed WebP assets
 client/public/images/*

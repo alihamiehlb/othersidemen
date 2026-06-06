@@ -22,7 +22,7 @@ OTHER SIDE is a men-only fashion e-commerce store (Lebanon / worldwide shipping)
 - Prices in USD; payments: COD, WhatsApp, Whish Pay (Lebanon)
 
 ## API (backend, not for crawling)
-- Base: configured via VITE_API_URL in production
+- Base: same-origin `/api` (Cloudflare Pages proxy to Workers API)
 - Health: GET /api/health
 - Auth: email/password + Google OAuth
 
