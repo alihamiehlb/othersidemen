@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
 import { useProducts } from '@/hooks/useProducts'
+import { useTheme } from '@/contexts/ThemeContext'
 
 const STYLE_LABELS: Record<string, { title: string; description: string }> = {
   minimal: { title: 'MINIMAL', description: 'Clean. Simple. Timeless.' },
@@ -13,6 +14,8 @@ const STYLE_LABELS: Record<string, { title: string; description: string }> = {
 
 export function StyleDnaSection() {
   const { products, loading, error } = useProducts(undefined, 5, { previewSection: 'styleDna' })
+  const { theme } = useTheme()
+  const isLight = theme === 'light'
 
   const cards = Object.keys(STYLE_LABELS).map((id, index) => ({
     id,
@@ -21,7 +24,10 @@ export function StyleDnaSection() {
   }))
 
   return (
-    <section className="bg-brand-black px-6 py-20 lg:px-10" aria-labelledby="style-dna-heading">
+    <section
+      className={`px-4 py-16 sm:px-6 lg:px-10 lg:py-20 ${isLight ? 'bg-neutral-50' : 'bg-brand-black'}`}
+      aria-labelledby="style-dna-heading"
+    >
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -29,7 +35,7 @@ export function StyleDnaSection() {
             <h2 id="style-dna-heading" className="text-3xl font-black uppercase tracking-tight lg:text-4xl">
               What&apos;s your vibe?
             </h2>
-            <p className="mt-2 max-w-md text-sm text-brand-muted">
+            <p className="mt-2 max-w-md text-sm text-theme-secondary">
               One pick per category — open any card for the full look page.
             </p>
           </div>
@@ -42,7 +48,7 @@ export function StyleDnaSection() {
         {loading && <p className="text-sm text-brand-muted">Loading looks...</p>}
         {error && !loading && <p className="text-sm text-red-400">Could not load products.</p>}
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 md:gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
           {cards.map((card, index) =>
             card.product ? (
               <ProductCard key={card.id} product={card.product} index={index} />
@@ -50,10 +56,12 @@ export function StyleDnaSection() {
               <Link
                 key={card.id}
                 to="/shop"
-                className="group relative flex overflow-hidden rounded-lg border border-theme-subtle bg-brand-gray"
+                className={`group relative flex overflow-hidden rounded-2xl border bg-brand-gray ${
+                  isLight ? 'border-black/10 shadow-sm' : 'border-theme-subtle'
+                }`}
                 style={{ aspectRatio: '3/5' }}
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent" />
+                <div className={`absolute inset-0 ${isLight ? 'bg-gradient-to-t from-white via-white/50 to-transparent' : 'bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent'}`} />
                 <div className="relative z-10 flex flex-1 flex-col justify-end p-4">
                   <h3 className="text-xs font-bold uppercase tracking-widest">{card.label.title}</h3>
                   <p className="mt-1 text-[10px] text-brand-muted">{card.label.description}</p>

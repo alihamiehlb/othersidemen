@@ -4,6 +4,7 @@ import { cacheGet, cacheSet } from '../config/redis.js'
 import { Product } from '../models/Product.js'
 import { productPublicFilter } from '../policies/accessPolicies.js'
 import { sendError, sendSuccess } from '../utils/apiResponse.js'
+import { lookGroupKey, lookGroupSlugPrefix } from '../utils/lookGroup.js'
 
 export const productsRouter = Router()
 
@@ -65,7 +66,21 @@ productsRouter.get('/:slug', async (req, res) => {
     return
   }
 
-  await cacheSet(cacheKey, product, CACHE_TTL)
+  const prefix = lookGroupSlugPrefix(lookGroupKey(product.slug))
+  const siblings = await Product.find({ slug: { $regex: prefix }, ...productPublicFilter() })
+    .select('images')
+    .lean()
+  const mergedImages = [...product.images]
+  for (const s of siblings) {
+    for (const img of s.images ?? []) {
+      if (img && !mergedImages.includes(img)) mergedImages.push(img)
+    }
+  }
+  const enriched = mergedImages.length > product.images.length
+    ? { ...product, images: mergedImages }
+    : product
+
+  await cacheSet(cacheKey, enriched, CACHE_TTL)
   res.set('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1200')
-  sendSuccess(res, product)
+  sendSuccess(res, enriched)
 })

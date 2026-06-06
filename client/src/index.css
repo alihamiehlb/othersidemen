@@ -25,7 +25,9 @@
     --theme-surface: rgb(0 0 0 / 0.6);
     --theme-border: rgb(255 255 255 / 0.08);
     --theme-subtle: rgb(255 255 255 / 0.1);
-    --theme-input-bg: transparent;
+    --theme-input-bg: #141414;
+    --theme-input-text: #f5f5f5;
+    --theme-secondary: #b8b8b8;
     --theme-gradient-from: rgb(0 0 0 / 0.9);
   }
 
@@ -40,7 +42,9 @@
     --theme-surface: rgb(255 255 255 / 0.85);
     --theme-border: rgb(0 0 0 / 0.08);
     --theme-subtle: rgb(0 0 0 / 0.12);
-    --theme-input-bg: rgb(255 255 255 / 0.9);
+    --theme-input-bg: #ffffff;
+    --theme-input-text: #111111;
+    --theme-secondary: #444444;
     --theme-gradient-from: rgb(255 255 255 / 0.95);
   }
 
@@ -52,6 +56,14 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.2s ease, color 0.2s ease;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (max-width: 1023px) {
+    main {
+      scroll-behavior: smooth;
+    }
   }
 }
 
@@ -72,6 +84,30 @@
     border-color: var(--theme-border);
   }
 
+  .text-theme-secondary {
+    color: var(--theme-secondary);
+  }
+
+  .admin-field,
+  .admin-field option {
+    color: var(--theme-input-text);
+    background-color: var(--theme-input-bg);
+  }
+
+  select.admin-field {
+    appearance: auto;
+  }
+
+  html[data-theme="dark"] select.admin-field option {
+    background-color: #1a1a1a;
+    color: #f5f5f5;
+  }
+
+  html[data-theme="light"] select.admin-field option {
+    background-color: #ffffff;
+    color: #111111;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -80,7 +116,25 @@
     animation: product-fade-up 0.5s ease-out both;
   }
 
+  .hero-cta-panel {
+    border-radius: 2rem;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .hero-cta-panel {
+      border-radius: 2.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-cta-panel {
+      border-radius: 2.5rem;
+    }
+  }
+
   .product-card-image {
+    border-radius: 1.25rem;
     transition: box-shadow 0.3s ease;
   }
 

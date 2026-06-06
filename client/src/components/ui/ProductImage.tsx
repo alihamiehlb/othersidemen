@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
-import { resolveProductImageSrc } from '@/utils/productImageUrl'
+import { productImageOriginCount, resolveProductImageSrc } from '@/utils/productImageUrl'
 
 interface ProductImageProps {
   src?: string
@@ -17,8 +17,14 @@ export function ProductImage({
   containerClassName = '',
   fit = 'cover',
 }: ProductImageProps) {
-  const [failed, setFailed] = useState(false)
-  const resolved = resolveProductImageSrc(src)
+  const [originIndex, setOriginIndex] = useState(0)
+  const maxOrigins = productImageOriginCount(src)
+  const failed = originIndex >= maxOrigins
+  const resolved = resolveProductImageSrc(src, originIndex)
+
+  const handleError = useCallback(() => {
+    setOriginIndex((prev) => prev + 1)
+  }, [])
 
   if (!resolved || failed) {
     return (
@@ -34,7 +40,7 @@ export function ProductImage({
       alt={alt}
       loading="lazy"
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={handleError}
       className={`${fit === 'contain' ? 'object-contain' : 'object-cover'} ${className}`}
     />
   )

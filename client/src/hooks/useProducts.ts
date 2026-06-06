@@ -22,13 +22,15 @@ export function useProducts(
     setError(false)
     setUsingFallback(false)
 
-    const params = new URLSearchParams({ limit: String(Math.max(limit, limit + (options?.skip ?? 0))) })
-    if (category) params.set('category', category)
-    if (options?.featured) params.set('featured', 'true')
+    const sliceList = (list: ProductCardData[]) => {
+      let out = category === 'looks' ? dedupeByLookGroup(list) : list
+      if (options?.skip) out = out.slice(options.skip)
+      return out.slice(0, limit)
+    }
 
-    const applyFallback = async () => {
+    const applyPreview = async () => {
       const preview = await loadCatalogPreview()
-      if (cancelled) return
+      if (cancelled) return false
       let pool: ProductCardData[] = []
       if (options?.previewSection) {
         pool = previewSection(preview, options.previewSection)
@@ -37,35 +39,57 @@ export function useProducts(
       } else if (preview?.all) {
         pool = category ? preview.all.filter((p) => p.category === category) : preview.all
       }
-      const sliced = pool.slice(0, limit)
+      const sliced = sliceList(pool)
       if (sliced.length) {
         setProducts(sliced)
         setUsingFallback(true)
-      } else {
-        setError(true)
+        return true
       }
+      return false
     }
 
-    api<ProductCardData[]>(`/api/products?${params.toString()}`, {}, 2)
-      .then(async (res) => {
+    async function load() {
+      // Curated homepage sections always use catalog-preview (deduped, correct categories).
+      if (options?.previewSection) {
+        const ok = await applyPreview()
+        if (!cancelled) {
+          if (!ok) setError(true)
+          setLoading(false)
+        }
+        return
+      }
+
+      const params = new URLSearchParams({ limit: String(Math.max(limit, limit + (options?.skip ?? 0))) })
+      if (category) params.set('category', category)
+      if (options?.featured) params.set('featured', 'true')
+
+      try {
+        const res = await api<ProductCardData[]>(`/api/products?${params.toString()}`, {}, 2)
         if (cancelled) return
         if (res.success && res.data?.length) {
-          let list = category === 'looks' ? dedupeByLookGroup(res.data) : res.data
-          if (options?.skip) list = list.slice(options.skip)
-          list = list.slice(0, limit)
+          const list = sliceList(res.data)
           if (list.length) {
             setProducts(list)
+            setLoading(false)
             return
           }
         }
-        await applyFallback()
-      })
-      .catch(() => {
-        if (!cancelled) void applyFallback()
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
+        const ok = await applyPreview()
+        if (!cancelled) {
+          if (!ok) setError(true)
+          setLoading(false)
+        }
+      } catch {
+        if (cancelled) return
+        const ok = await applyPreview()
+        if (!cancelled) {
+          if (!ok) setError(true)
+          setLoading(false)
+        }
+      }
+    }
+
+    void load()
 
     return () => {
       cancelled = true

@@ -31,7 +31,7 @@ function formatPrice(price: number): string {
 export function ProductCard({ product, index = 0, showWishlist = false, onSelect }: ProductCardProps) {
   const imageBlock = (
     <div
-      className="product-card-image relative mb-3 overflow-hidden rounded-lg bg-brand-gray"
+      className="product-card-image relative mb-3 overflow-hidden rounded-2xl bg-brand-gray"
       style={{ aspectRatio: '3/4' }}
     >
       {product.images[0] ? (

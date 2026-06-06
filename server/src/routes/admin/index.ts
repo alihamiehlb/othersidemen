@@ -1,5 +1,6 @@
 import { Router } from 'express'
 
+import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 
 import type { AuthRequest } from '../../middleware/auth.js'
@@ -22,6 +23,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js'
 
 import { invalidateProductCache } from '../../utils/invalidateProductCache.js'
 import { escapeRegex } from '../../utils/escapeRegex.js'
+import { lookGroupKey, lookGroupSlugPrefix } from '../../utils/lookGroup.js'
 
 
 
@@ -89,6 +91,12 @@ function paymentStatusForOrderStatus(status: string): string {
 
 }
 
+function parsePageLimit(req: { query: Record<string, unknown> }, defaultLimit = 20, maxLimit = 100) {
+  const page = Math.max(1, parseInt(String(req.query.page ?? '1'), 10) || 1)
+  const limit = Math.min(maxLimit, Math.max(1, parseInt(String(req.query.limit ?? defaultLimit), 10) || defaultLimit))
+  return { page, limit }
+}
+
 
 
 adminRouter.get('/stats', async (_req, res) => {
@@ -147,9 +155,7 @@ adminRouter.get('/stats', async (_req, res) => {
 
 adminRouter.get('/users', async (req, res) => {
 
-  const page = Math.max(1, parseInt(req.query.page as string, 10) || 1)
-
-  const limit = 20
+  const { page, limit } = parsePageLimit(req)
 
   const search = (req.query.search as string)?.trim()
 
@@ -267,13 +273,54 @@ adminRouter.patch('/users/:id', validateObjectId(), async (req: AuthRequest, res
 
 })
 
+adminRouter.patch('/users/:id/password', validateObjectId(), async (req: AuthRequest, res) => {
+  const schema = z.object({ password: z.string().min(8).max(128) })
+  const parsed = schema.safeParse(req.body)
+  if (!parsed.success) {
+    sendError(res, 'Password must be 8–128 characters', 400)
+    return
+  }
+
+  const user = await User.findById(req.params.id)
+  if (!user) {
+    sendError(res, 'User not found', 404)
+    return
+  }
+
+  user.passwordHash = await bcrypt.hash(parsed.data.password, 12)
+  await user.save()
+  sendSuccess(res, { message: 'Password updated' })
+})
+
+adminRouter.delete('/users/:id', validateObjectId(), async (req: AuthRequest, res) => {
+  if (req.params.id === req.userId) {
+    sendError(res, 'Cannot delete yourself', 400)
+    return
+  }
+
+  const target = await User.findById(req.params.id)
+  if (!target) {
+    sendError(res, 'User not found', 404)
+    return
+  }
+
+  if (target.role === 'admin') {
+    const adminCount = await User.countDocuments({ role: 'admin', isActive: true })
+    if (adminCount <= 1) {
+      sendError(res, 'Cannot delete the last admin', 400)
+      return
+    }
+  }
+
+  await User.findByIdAndDelete(req.params.id)
+  sendSuccess(res, { message: 'User deleted' })
+})
+
 
 
 adminRouter.get('/products', async (req, res) => {
 
-  const page = Math.max(1, parseInt(req.query.page as string, 10) || 1)
-
-  const limit = 20
+  const { page, limit } = parsePageLimit(req, 50, 100)
 
   const search = (req.query.search as string)?.trim()
 
@@ -405,6 +452,19 @@ adminRouter.patch('/products/:id', validateObjectId(), async (req, res) => {
 
 adminRouter.delete('/products/:id', validateObjectId(), async (req, res) => {
 
+  const permanent = req.query.permanent === 'true'
+
+  if (permanent) {
+    const product = await Product.findByIdAndDelete(req.params.id)
+    if (!product) {
+      sendError(res, 'Product not found', 404)
+      return
+    }
+    await invalidateProductCache(product.slug)
+    sendSuccess(res, { message: 'Product permanently deleted' })
+    return
+  }
+
   const product = await Product.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true })
 
   if (!product) {
@@ -421,13 +481,102 @@ adminRouter.delete('/products/:id', validateObjectId(), async (req, res) => {
 
 })
 
+adminRouter.get('/look-groups', async (req, res) => {
+  const { page, limit } = parsePageLimit(req, 24, 48)
+  const category = req.query.category as string | undefined
+  const search = (req.query.search as string)?.trim()
+
+  const filter: Record<string, unknown> = {}
+  if (category) filter.category = category
+  if (search) {
+    const safe = escapeRegex(search)
+    filter.$or = [
+      { name: { $regex: safe, $options: 'i' } },
+      { slug: { $regex: safe, $options: 'i' } },
+    ]
+  }
+
+  const products = await Product.find(filter)
+    .select('name slug price category images isActive tags description')
+    .sort({ createdAt: -1 })
+    .lean()
+
+  type GroupRow = {
+    key: string
+    primaryId: string
+    primarySlug: string
+    name: string
+    description: string
+    category: string
+    price: number
+    tags: string[]
+    isActive: boolean
+    images: string[]
+    slugs: string[]
+    productIds: string[]
+  }
+
+  const groupsMap = new Map<string, GroupRow>()
+  for (const p of products) {
+    const key = lookGroupKey(p.slug)
+    const existing = groupsMap.get(key)
+    if (!existing) {
+      groupsMap.set(key, {
+        key,
+        primaryId: String(p._id),
+        primarySlug: p.slug,
+        name: p.name,
+        description: p.description ?? '',
+        category: p.category,
+        price: p.price,
+        tags: p.tags ?? [],
+        isActive: p.isActive,
+        images: [...(p.images ?? [])],
+        slugs: [p.slug],
+        productIds: [String(p._id)],
+      })
+      continue
+    }
+    existing.slugs.push(p.slug)
+    existing.productIds.push(String(p._id))
+    for (const img of p.images ?? []) {
+      if (img && !existing.images.includes(img)) existing.images.push(img)
+    }
+  }
+
+  const groups = Array.from(groupsMap.values())
+  const total = groups.length
+  const slice = groups.slice((page - 1) * limit, page * limit)
+  sendSuccess(res, slice, 200, { total, page, limit })
+})
+
+adminRouter.post('/look-groups/:key/merge', async (req, res) => {
+  const key = req.params.key
+  const prefix = lookGroupSlugPrefix(key)
+  const siblings = await Product.find({ slug: { $regex: prefix } }).sort({ slug: 1 }).lean()
+  if (siblings.length === 0) {
+    sendError(res, 'Look group not found', 404)
+    return
+  }
+
+  const primary = siblings[0]
+  const mergedImages = [...(primary.images ?? [])]
+  for (const s of siblings.slice(1)) {
+    for (const img of s.images ?? []) {
+      if (img && !mergedImages.includes(img)) mergedImages.push(img)
+    }
+  }
+
+  await Product.findByIdAndUpdate(primary._id, { images: mergedImages })
+  await invalidateProductCache(primary.slug)
+  sendSuccess(res, { primarySlug: primary.slug, images: mergedImages, mergedCount: siblings.length })
+})
+
 
 
 adminRouter.get('/orders', async (req, res) => {
 
-  const page = Math.max(1, parseInt(req.query.page as string, 10) || 1)
-
-  const limit = 20
+  const { page, limit } = parsePageLimit(req)
 
   const status = req.query.status as string | undefined
 
@@ -515,5 +664,14 @@ adminRouter.patch('/orders/:id/status', validateObjectId(), async (req, res) => 
 
   sendSuccess(res, order)
 
+})
+
+adminRouter.delete('/orders/:id', validateObjectId(), async (req, res) => {
+  const order = await Order.findByIdAndDelete(req.params.id)
+  if (!order) {
+    sendError(res, 'Order not found', 404)
+    return
+  }
+  sendSuccess(res, { message: 'Order deleted' })
 })
 

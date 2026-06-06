@@ -63,15 +63,17 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col justify-end lg:grid lg:grid-cols-2 lg:justify-center">
-        <div className="flex flex-col justify-end px-5 pb-10 sm:px-8 sm:pb-12 lg:justify-center lg:px-12 lg:py-16 xl:px-20">
+        <div className="flex flex-col justify-end px-5 pb-10 sm:px-8 sm:pb-12 lg:justify-center lg:px-10 lg:py-16 xl:px-24">
           <div
-            className={`max-w-lg rounded-sm px-1 py-2 lg:max-w-xl ${
-              isLight ? 'bg-white/75 backdrop-blur-sm' : 'bg-black/45 backdrop-blur-[2px]'
+            className={`hero-cta-panel w-full max-w-xl px-6 py-7 shadow-lg sm:max-w-2xl sm:px-8 sm:py-9 lg:max-w-2xl lg:px-10 lg:py-10 ${
+              isLight
+                ? 'border border-black/10 bg-white/92 shadow-[0_12px_48px_rgb(0_0_0_/_0.12)] backdrop-blur-md'
+                : 'border border-white/15 bg-black/55 shadow-[0_12px_48px_rgb(0_0_0_/_0.45)] backdrop-blur-md'
             }`}
           >
             <p
               className={`mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] sm:mb-4 ${
-                isLight ? 'text-neutral-700' : 'text-white/85'
+                isLight ? 'text-neutral-600' : 'text-white/85'
               }`}
             >
               OTHERSIDE DNA — MEN
@@ -87,7 +89,7 @@ export function HeroSection() {
             </h1>
             <p
               className={`mb-6 max-w-md text-sm leading-relaxed sm:mb-8 lg:mb-10 ${
-                isLight ? 'text-neutral-800' : 'text-white/90'
+                isLight ? 'text-neutral-700' : 'text-white/90'
               }`}
             >
               Tailored for modern men. Designed to make every side yours.
@@ -97,7 +99,12 @@ export function HeroSection() {
                 <Button variant="solid" className="w-full min-[400px]:w-auto">Shop Men&apos;s Collection</Button>
               </Link>
               <Link to="/shop?category=looks">
-                <Button variant="outline" className="w-full min-[400px]:w-auto">New Arrivals</Button>
+                <Button
+                  variant="outline"
+                  className={`w-full min-[400px]:w-auto ${isLight ? 'border-neutral-900/80 hover:bg-neutral-900 hover:text-white' : ''}`}
+                >
+                  New Arrivals
+                </Button>
               </Link>
             </div>
           </div>

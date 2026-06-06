@@ -27,6 +27,7 @@ Thumbs.db
 coverage/
 *.tsbuildinfo
 .tools/
+graphify-out/
 
 # Keep the images directory but ignore temp uploads; allow processed WebP assets
 client/public/images/*

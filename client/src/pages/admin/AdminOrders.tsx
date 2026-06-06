@@ -36,10 +36,10 @@ interface OrderRow {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  pending: 'text-yellow-500',
-  paid: 'text-blue-400',
-  shipped: 'text-purple-400',
-  delivered: 'text-green-500',
+  pending: 'text-amber-400',
+  paid: 'text-sky-400',
+  shipped: 'text-violet-400',
+  delivered: 'text-green-400',
   cancelled: 'text-red-400',
 }
 
@@ -75,6 +75,20 @@ export function AdminOrders() {
     }
   }
 
+  async function deleteOrder(id: string) {
+    if (!window.confirm('Delete this order permanently?')) return
+    const res = await api(`/api/admin/orders/${id}`, { method: 'DELETE' })
+    if (res.success) {
+      if (expandedId === id) {
+        setExpandedId(null)
+        setDetail(null)
+      }
+      load()
+    } else {
+      alert(res.error ?? 'Delete failed')
+    }
+  }
+
   async function toggleDetail(id: string) {
     if (expandedId === id) {
       setExpandedId(null)
@@ -89,15 +103,15 @@ export function AdminOrders() {
   if (loading && orders.length === 0) return <LoadingScreen message="Loading orders" />
 
   return (
-    <div className="px-6 py-10 lg:px-10">
+    <div className="page-enter px-4 py-8 sm:px-6 lg:px-10">
       <AdminPageHeader
         title="Orders"
-        description={`${total} orders · update status & view shipping`}
+        description={`${total} orders · update status, view shipping, delete`}
         actions={
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}
-            className="border border-theme-subtle bg-theme-input-bg px-3 py-2 text-sm"
+            className="admin-field border border-theme-subtle bg-theme-input-bg px-3 py-2 text-sm"
           >
             <option value="">All statuses</option>
             {['pending', 'paid', 'shipped', 'delivered', 'cancelled'].map((s) => (
@@ -108,45 +122,54 @@ export function AdminOrders() {
       />
 
       {orders.length === 0 ? (
-        <p className="text-sm text-brand-muted">No orders yet.</p>
+        <p className="text-sm text-theme-secondary">No orders yet.</p>
       ) : (
         <div className="space-y-3">
           {orders.map((o) => (
             <div key={o._id} className="overflow-hidden rounded border border-theme-subtle">
-              <div className="flex flex-wrap items-center gap-4 bg-brand-dark/30 p-4">
-                <button type="button" onClick={() => toggleDetail(o._id)} className="min-w-[180px] flex-1 text-left">
+              <div className="flex flex-col gap-4 bg-brand-dark/30 p-4 sm:flex-row sm:flex-wrap sm:items-center">
+                <button type="button" onClick={() => toggleDetail(o._id)} className="min-w-0 flex-1 text-left">
                   <p className="text-sm font-semibold">{o.userId?.name ?? 'Unknown customer'}</p>
-                  <p className="text-[10px] text-brand-muted">{o.userId?.email}</p>
-                  <p className="mt-1 text-[10px] text-brand-muted">
+                  <p className="text-xs text-theme-secondary">{o.userId?.email ?? 'No email'}</p>
+                  <p className="mt-1 text-[10px] text-theme-secondary">
                     {new Date(o.createdAt).toLocaleString()} · {o.paymentMethod}
                   </p>
                 </button>
                 <p className="text-lg font-bold tabular-nums">${o.total.toFixed(2)}</p>
-                <span className={`text-[10px] font-semibold uppercase tracking-widest ${STATUS_COLORS[o.status] ?? ''}`}>
+                <span className={`text-[10px] font-semibold uppercase tracking-widest ${STATUS_COLORS[o.status] ?? 'text-theme-secondary'}`}>
                   {o.status}
                 </span>
                 <select
                   value={o.status}
                   onChange={(e) => updateStatus(o._id, e.target.value)}
-                  className="border border-theme-subtle bg-theme-input-bg px-3 py-1.5 text-xs uppercase"
+                  className="admin-field w-full border border-theme-subtle bg-theme-input-bg px-3 py-2 text-xs uppercase sm:w-auto"
                 >
                   {['pending', 'paid', 'shipped', 'delivered', 'cancelled'].map((s) => (
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
-                <button
-                  type="button"
-                  onClick={() => toggleDetail(o._id)}
-                  className="text-[10px] uppercase tracking-widest text-brand-muted hover:text-brand-white"
-                >
-                  {expandedId === o._id ? 'Hide' : 'Details'}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => toggleDetail(o._id)}
+                    className="text-[10px] uppercase tracking-widest text-theme-secondary hover:text-brand-white"
+                  >
+                    {expandedId === o._id ? 'Hide' : 'Details'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteOrder(o._id)}
+                    className="text-[10px] uppercase tracking-widest text-red-400 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
 
               {expandedId === o._id && detail?._id === o._id && (
                 <div className="grid gap-6 border-t border-theme-border p-4 md:grid-cols-2">
                   <div>
-                    <p className="mb-3 text-[10px] uppercase tracking-widest text-brand-muted">Line items</p>
+                    <p className="mb-3 text-[10px] uppercase tracking-widest text-theme-secondary">Line items</p>
                     <ul className="space-y-2">
                       {detail.items.map((item, i) => (
                         <li key={i} className="flex justify-between gap-4 border-b border-theme-border pb-2 text-sm">
@@ -155,23 +178,23 @@ export function AdminOrders() {
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-3 text-xs text-brand-muted tabular-nums">
+                    <p className="mt-3 text-xs text-theme-secondary tabular-nums">
                       Subtotal ${detail.subtotal.toFixed(2)} · Shipping ${detail.shipping.toFixed(2)} · Payment {detail.paymentStatus}
                     </p>
                   </div>
                   <div>
-                    <p className="mb-3 text-[10px] uppercase tracking-widest text-brand-muted">Ship to</p>
+                    <p className="mb-3 text-[10px] uppercase tracking-widest text-theme-secondary">Ship to</p>
                     <address className="not-italic text-sm leading-relaxed">
                       <p>{detail.shippingAddress.fullName}</p>
-                      <p className="text-brand-muted">{detail.shippingAddress.line1}</p>
-                      <p className="text-brand-muted">
+                      <p className="text-theme-secondary">{detail.shippingAddress.line1}</p>
+                      <p className="text-theme-secondary">
                         {detail.shippingAddress.city}, {detail.shippingAddress.country} {detail.shippingAddress.postalCode}
                       </p>
                       {detail.shippingAddress.phone && (
-                        <p className="mt-1 text-brand-muted">{detail.shippingAddress.phone}</p>
+                        <p className="mt-1 text-theme-secondary">{detail.shippingAddress.phone}</p>
                       )}
                     </address>
-                    <p className="mt-4 text-[10px] text-brand-muted">Order ID: {detail._id}</p>
+                    <p className="mt-4 text-[10px] text-theme-secondary">Order ID: {detail._id}</p>
                   </div>
                 </div>
               )}
