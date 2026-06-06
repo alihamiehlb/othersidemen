@@ -25,7 +25,7 @@ export function Layout() {
       <ApiStatusBanner />
       <Header />
       {showLoader && <LoadingScreen />}
-      <main className={showLoader ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}>
+      <main className={`page-enter ${showLoader ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}>
         <Outlet />
       </main>
       <Footer />

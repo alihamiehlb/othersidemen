@@ -118,18 +118,19 @@ export function ShopPage() {
         description="Browse the full OTHER SIDE men's collection — outerwear, tops, footwear, and accessories."
         canonicalPath="/shop"
       />
-    <div className="page-enter mx-auto max-w-[1600px] px-6 py-16 lg:px-10">
-      <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.3em] text-brand-muted">Men&apos;s Collection</p>
-      <h1 className="mb-2 text-3xl font-black uppercase tracking-tight lg:text-4xl">Shop All</h1>
-      <p className="mb-6 text-sm text-brand-muted">{total} items — scroll to load more</p>
+    <div className="page-enter section-shell">
+      <div className="store-container">
+      <p className="section-eyebrow">Men&apos;s Collection</p>
+      <h1 className="section-title mb-2">Shop All</h1>
+      <p className="mb-6 text-sm text-theme-secondary">{total} items — scroll to load more</p>
 
-      <div className="mb-10 flex flex-wrap gap-2">
+      <div className="-mx-1 mb-8 flex gap-2 overflow-x-auto pb-1 scrollbar-none sm:mx-0 sm:flex-wrap sm:overflow-visible">
         {CATEGORIES.map((cat) => (
           <button
             key={cat}
             type="button"
             onClick={() => setCategory(cat)}
-            className={`px-4 py-2 text-[10px] font-semibold uppercase tracking-widest transition-colors ${
+            className={`shrink-0 rounded-full px-4 py-2.5 text-[10px] font-semibold uppercase tracking-widest transition-colors ${
               category === cat
                 ? 'bg-brand-white text-brand-black'
                 : 'border border-theme-subtle text-brand-muted hover:text-brand-white'
@@ -140,7 +141,7 @@ export function ShopPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
         {products.map((p, i) => (
           <ProductCard key={p._id} product={p} index={i} onSelect={handleSelect} />
         ))}
@@ -163,6 +164,7 @@ export function ShopPage() {
       )}
 
       <ProductModal product={selected} loading={modalLoading} onClose={closeProduct} />
+      </div>
     </div>
     </>
   )

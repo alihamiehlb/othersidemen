@@ -14,7 +14,7 @@ export function HeroSection() {
   const isLight = theme === 'light'
 
   return (
-    <section className="relative min-h-[100svh] overflow-hidden pt-16" aria-label="Hero">
+    <section className="relative min-h-[100svh] overflow-hidden pt-16 safe-top" aria-label="Hero">
       <div
         className={`absolute inset-0 ${
           isLight
@@ -63,7 +63,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col justify-end lg:grid lg:grid-cols-2 lg:justify-center">
-        <div className="flex flex-col justify-end px-5 pb-10 sm:px-8 sm:pb-12 lg:justify-center lg:px-10 lg:py-16 xl:px-24">
+        <div className="flex flex-col justify-end px-4 pb-[max(2.5rem,env(safe-area-inset-bottom))] sm:px-8 sm:pb-12 lg:justify-center lg:px-10 lg:py-16 xl:px-24">
           <div
             className={`hero-cta-panel w-full max-w-xl px-6 py-7 shadow-lg sm:max-w-2xl sm:px-8 sm:py-9 lg:max-w-2xl lg:px-10 lg:py-10 ${
               isLight
@@ -94,14 +94,15 @@ export function HeroSection() {
             >
               Tailored for modern men. Designed to make every side yours.
             </p>
-            <div className="flex flex-col gap-3 min-[400px]:flex-row min-[400px]:gap-4">
-              <Link to="/shop">
-                <Button variant="solid" className="w-full min-[400px]:w-auto">Shop Men&apos;s Collection</Button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+              <Link to="/shop" className="w-full sm:w-auto">
+                <Button variant="solid" fullWidth className="sm:w-auto">Shop Men&apos;s Collection</Button>
               </Link>
-              <Link to="/shop?category=looks">
+              <Link to="/shop?category=looks" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
-                  className={`w-full min-[400px]:w-auto ${isLight ? 'border-neutral-900/80 hover:bg-neutral-900 hover:text-white' : ''}`}
+                  fullWidth
+                  className={`sm:w-auto ${isLight ? 'border-neutral-900/80 hover:bg-neutral-900 hover:text-white' : ''}`}
                 >
                   New Arrivals
                 </Button>

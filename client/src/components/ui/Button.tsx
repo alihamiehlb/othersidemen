@@ -24,9 +24,9 @@ export function Button({
   return (
     <button
       className={`
-        inline-flex items-center justify-center px-8 py-3
+        btn-press inline-flex min-h-[48px] items-center justify-center rounded-2xl px-6 py-3
         text-xs font-semibold uppercase tracking-widest
-        transition-colors duration-200
+        transition-all duration-200 sm:rounded-full sm:px-8
         ${variantClasses[variant]}
         ${fullWidth ? 'w-full' : ''}
         ${className}

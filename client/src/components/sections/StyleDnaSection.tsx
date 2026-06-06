@@ -1,6 +1,8 @@
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
+import { SectionHeader } from '@/components/ui/SectionHeader'
 import { useProducts } from '@/hooks/useProducts'
 import { useTheme } from '@/contexts/ThemeContext'
 
@@ -23,52 +25,83 @@ export function StyleDnaSection() {
     product: products[index] as ProductCardData | undefined,
   }))
 
+  const scrollByCard = useCallback((direction: 1 | -1) => {
+    const rail = document.getElementById('style-dna-rail')
+    if (!rail) return
+    const cardWidth = rail.querySelector('.snap-item')?.clientWidth ?? 280
+    rail.scrollBy({ left: direction * (cardWidth + 16), behavior: 'smooth' })
+  }, [])
+
+  const [canScroll, setCanScroll] = useState(false)
+  useEffect(() => {
+    const rail = document.getElementById('style-dna-rail')
+    if (!rail) return
+    const update = () => setCanScroll(rail.scrollWidth > rail.clientWidth + 8)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [cards.length, loading])
+
   return (
     <section
-      className={`px-4 py-16 sm:px-6 lg:px-10 lg:py-20 ${isLight ? 'bg-neutral-50' : 'bg-brand-black'}`}
+      className={`section-shell ${isLight ? 'section-surface-light' : 'section-surface-dark'}`}
       aria-labelledby="style-dna-heading"
     >
-      <div className="mx-auto max-w-[1600px]">
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.3em] text-brand-muted">Style DNA</p>
-            <h2 id="style-dna-heading" className="text-3xl font-black uppercase tracking-tight lg:text-4xl">
-              What&apos;s your vibe?
-            </h2>
-            <p className="mt-2 max-w-md text-sm text-theme-secondary">
-              One pick per category — open any card for the full look page.
-            </p>
-          </div>
-          <Link to="/shop" className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-white transition-colors hover:text-brand-light">
-            Shop Collection
-            <ArrowRight size={14} />
-          </Link>
-        </div>
+      <div className="store-container">
+        <SectionHeader
+          id="style-dna-heading"
+          eyebrow="Style DNA"
+          title="What's your vibe?"
+          description="One pick per category — open any card for the full look page."
+          linkTo="/shop"
+          linkLabel="Shop Collection"
+        />
 
-        {loading && <p className="text-sm text-brand-muted">Loading looks...</p>}
+        {loading && <p className="text-sm text-theme-secondary">Loading looks...</p>}
         {error && !loading && <p className="text-sm text-red-400">Could not load products.</p>}
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
-          {cards.map((card, index) =>
-            card.product ? (
-              <ProductCard key={card.id} product={card.product} index={index} />
-            ) : (
-              <Link
-                key={card.id}
-                to="/shop"
-                className={`group relative flex overflow-hidden rounded-2xl border bg-brand-gray ${
-                  isLight ? 'border-black/10 shadow-sm' : 'border-theme-subtle'
-                }`}
-                style={{ aspectRatio: '3/5' }}
-              >
-                <div className={`absolute inset-0 ${isLight ? 'bg-gradient-to-t from-white via-white/50 to-transparent' : 'bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent'}`} />
-                <div className="relative z-10 flex flex-1 flex-col justify-end p-4">
-                  <h3 className="text-xs font-bold uppercase tracking-widest">{card.label.title}</h3>
-                  <p className="mt-1 text-[10px] text-brand-muted">{card.label.description}</p>
-                </div>
-              </Link>
-            ),
+        <div className="relative">
+          {canScroll && (
+            <div className="mb-3 flex justify-end gap-2 sm:hidden">
+              <button type="button" onClick={() => scrollByCard(-1)} className="touch-target rounded-full border border-theme-subtle px-3 text-xs uppercase tracking-widest">
+                Prev
+              </button>
+              <button type="button" onClick={() => scrollByCard(1)} className="touch-target rounded-full border border-theme-subtle px-3 text-xs uppercase tracking-widest">
+                Next
+              </button>
+            </div>
           )}
+
+          <div
+            id="style-dna-rail"
+            className="scroll-fade-x -mx-1 flex gap-4 overflow-x-auto pb-2 scrollbar-none snap-scroll-x sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0 md:grid-cols-5 md:gap-5"
+          >
+            {cards.map((card, index) => (
+              <div key={card.id} className="snap-item w-[78vw] shrink-0 sm:w-auto sm:shrink">
+                {card.product ? (
+                  <ProductCard product={card.product} index={index} />
+                ) : (
+                  <Link
+                    to="/shop"
+                    className={`group relative flex overflow-hidden rounded-2xl border bg-brand-gray ${
+                      isLight ? 'border-black/10 shadow-sm' : 'border-theme-subtle'
+                    }`}
+                    style={{ aspectRatio: '3/4' }}
+                  >
+                    <div className={`absolute inset-0 ${isLight ? 'bg-gradient-to-t from-white via-white/50 to-transparent' : 'bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent'}`} />
+                    <div className="relative z-10 flex flex-1 flex-col justify-end p-4">
+                      <h3 className="text-xs font-bold uppercase tracking-widest">{card.label.title}</h3>
+                      <p className="mt-1 text-[10px] text-theme-secondary">{card.label.description}</p>
+                      <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest">
+                        Explore
+                        <ArrowRight size={12} />
+                      </span>
+                    </div>
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

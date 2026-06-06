@@ -27,9 +27,9 @@ export function Footer() {
   const { theme } = useTheme()
 
   return (
-    <footer className="bg-brand-dark px-6 pt-20 pb-8 lg:px-10">
-      <div className="mx-auto max-w-[1600px]">
-        <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr]">
+    <footer className="section-shell bg-brand-dark pb-[max(2rem,env(safe-area-inset-bottom))] pt-16 lg:pt-20">
+      <div className="store-container">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr] lg:gap-12">
           <div>
             <Logo className="mb-4 h-12" color={theme === 'light' ? 'black' : 'white'} />
             <p className="mb-6 max-w-xs text-xs leading-relaxed text-brand-muted">
@@ -64,14 +64,14 @@ export function Footer() {
             <p className="mb-4 text-xs leading-relaxed text-brand-muted">
               Be the first to know about new drops, exclusive offers, and style inspiration.
             </p>
-            <form className="flex border border-theme-subtle" onSubmit={(e) => e.preventDefault()} aria-label="Newsletter signup">
+            <form className="flex overflow-hidden rounded-2xl border border-theme-subtle" onSubmit={(e) => e.preventDefault()} aria-label="Newsletter signup">
               <input
                 type="email"
                 placeholder="Your email"
                 aria-label="Email address"
-                className="flex-1 bg-transparent px-4 py-3 text-xs text-brand-white placeholder:text-brand-muted focus:outline-none"
+                className="min-h-[48px] flex-1 bg-transparent px-4 py-3 text-xs text-brand-white placeholder:text-brand-muted focus:outline-none"
               />
-              <button type="submit" aria-label="Subscribe" className="px-4 text-brand-white transition-colors hover:text-brand-light">
+              <button type="submit" aria-label="Subscribe" className="touch-target px-4 text-brand-white transition-colors hover:text-brand-light">
                 <ArrowRight size={16} />
               </button>
             </form>
