@@ -1,26 +1,23 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
-import { ProductModal } from '@/components/ui/ProductModal'
-import { useProductModal } from '@/hooks/useProductModal'
 import { useProducts } from '@/hooks/useProducts'
 
-const STYLE_LABELS: Record<string, { title: string; description: string; category: string }> = {
-  minimal: { title: 'MINIMAL', description: 'Clean. Simple. Timeless.', category: 'tops' },
-  street: { title: 'STREET', description: 'Bold. Urban. Effortless.', category: 'looks' },
-  creative: { title: 'CREATIVE', description: 'Unique. Expressive. You.', category: 'accessories' },
-  classic: { title: 'CLASSIC', description: 'Sharp. Refined. Always.', category: 'outerwear' },
-  tech: { title: 'TECH', description: 'Functional. Modern. Futuristic.', category: 'footwear' },
+const STYLE_LABELS: Record<string, { title: string; description: string }> = {
+  minimal: { title: 'MINIMAL', description: 'Clean. Simple. Timeless.' },
+  street: { title: 'STREET', description: 'Bold. Urban. Effortless.' },
+  creative: { title: 'CREATIVE', description: 'Unique. Expressive. You.' },
+  classic: { title: 'CLASSIC', description: 'Sharp. Refined. Always.' },
+  tech: { title: 'TECH', description: 'Functional. Modern. Futuristic.' },
 }
 
 export function StyleDnaSection() {
-  const { products: looksProducts, loading, error } = useProducts('looks', 5)
-  const { selected, loading: modalLoading, openProduct, closeProduct } = useProductModal()
+  const { products, loading, error } = useProducts(undefined, 5, { previewSection: 'styleDna' })
 
   const cards = Object.keys(STYLE_LABELS).map((id, index) => ({
     id,
     label: STYLE_LABELS[id],
-    product: looksProducts[index] as ProductCardData | undefined,
+    product: products[index] as ProductCardData | undefined,
   }))
 
   return (
@@ -33,7 +30,7 @@ export function StyleDnaSection() {
               What&apos;s your vibe?
             </h2>
             <p className="mt-2 max-w-md text-sm text-brand-muted">
-              Tap a look to shop — add to bag or order on WhatsApp.
+              One pick per category — open any card for the full look page.
             </p>
           </div>
           <Link to="/shop" className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-white transition-colors hover:text-brand-light">
@@ -48,16 +45,11 @@ export function StyleDnaSection() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 md:gap-4">
           {cards.map((card, index) =>
             card.product ? (
-              <ProductCard
-                key={card.id}
-                product={card.product}
-                index={index}
-                onSelect={(p) => void openProduct(p)}
-              />
+              <ProductCard key={card.id} product={card.product} index={index} />
             ) : (
               <Link
                 key={card.id}
-                to={`/shop?category=${card.label.category}`}
+                to="/shop"
                 className="group relative flex overflow-hidden rounded-lg border border-theme-subtle bg-brand-gray"
                 style={{ aspectRatio: '3/5' }}
               >
@@ -71,8 +63,6 @@ export function StyleDnaSection() {
           )}
         </div>
       </div>
-
-      <ProductModal product={selected} loading={modalLoading} onClose={closeProduct} />
     </section>
   )
 }

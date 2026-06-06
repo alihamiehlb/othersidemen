@@ -1,13 +1,10 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
-import { ProductModal } from '@/components/ui/ProductModal'
-import { useProductModal } from '@/hooks/useProductModal'
 import { useProducts } from '@/hooks/useProducts'
 
 export function LookbookSection() {
-  const { products, loading, error } = useProducts('looks', 8)
-  const { selected, loading: modalLoading, openProduct, closeProduct } = useProductModal()
+  const { products, loading, error } = useProducts('looks', 8, { previewSection: 'looks', skip: 0 })
 
   return (
     <section id="lookbook" className="bg-brand-black px-6 py-20 lg:px-10" aria-labelledby="lookbook-heading">
@@ -19,7 +16,7 @@ export function LookbookSection() {
               Real fits. Real people. Real life.
             </h2>
             <p className="mt-2 max-w-md text-sm text-brand-muted">
-              Click any look to view details, add to cart, or message us on WhatsApp.
+              Tap a look to open the full product page — gallery, sizes, and WhatsApp order.
             </p>
           </div>
           <Link to="/shop?category=looks" className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-white transition-colors hover:text-brand-light">
@@ -34,17 +31,11 @@ export function LookbookSection() {
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none">
           {products.map((product, index) => (
             <div key={product._id} className="w-[220px] shrink-0 sm:w-[240px]">
-              <ProductCard
-                product={product as ProductCardData}
-                index={index}
-                onSelect={(p) => void openProduct(p)}
-              />
+              <ProductCard product={product as ProductCardData} index={index} />
             </div>
           ))}
         </div>
       </div>
-
-      <ProductModal product={selected} loading={modalLoading} onClose={closeProduct} />
     </section>
   )
 }

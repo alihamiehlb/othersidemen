@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { ApiStatusBanner } from './ApiStatusBanner'
+import { CookieConsent } from '@/components/legal/CookieConsent'
 import { LoadingScreen } from '@/components/branding/LoadingScreen'
 
 export function Layout() {
@@ -28,6 +29,7 @@ export function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <CookieConsent />
     </>
   )
 }

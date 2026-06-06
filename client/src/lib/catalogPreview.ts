@@ -4,8 +4,19 @@ export interface CatalogPreview {
   generatedAt: string
   total?: number
   looks: ProductCardData[]
-  styleDna: ProductCardData[]
+  styleDna?: ProductCardData[]
+  newIn?: ProductCardData[]
+  featured?: ProductCardData[]
   all?: ProductCardData[]
+  lookGroups?: Record<string, {
+    key: string
+    primarySlug: string
+    name: string
+    description?: string
+    instagramUrl?: string
+    images: string[]
+    slugs: string[]
+  }>
 }
 
 let cache: CatalogPreview | null = null

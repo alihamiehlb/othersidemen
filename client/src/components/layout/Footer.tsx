@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { Logo } from '@/components/ui/Logo'
+import { useTheme } from '@/contexts/ThemeContext'
 import { FOOTER_LINKS } from '@/data/mockData'
 
 function FooterLink({ href, label }: { href: string; label: string }) {
@@ -23,12 +24,14 @@ function FooterLink({ href, label }: { href: string; label: string }) {
 }
 
 export function Footer() {
+  const { theme } = useTheme()
+
   return (
     <footer className="bg-brand-dark px-6 pt-20 pb-8 lg:px-10">
       <div className="mx-auto max-w-[1600px]">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr]">
           <div>
-            <Logo className="mb-4 h-12" />
+            <Logo className="mb-4 h-12" color={theme === 'light' ? 'black' : 'white'} />
             <p className="mb-6 max-w-xs text-xs leading-relaxed text-brand-muted">
               Two sides. One identity. Fashion designed for the modern individual who refuses to be defined by a single aesthetic.
             </p>

@@ -4,17 +4,20 @@ import { Logo } from '@/components/ui/Logo'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import { NAV_LINKS } from '@/data/mockData'
 
 export function Header() {
   const { user } = useAuth()
   const { itemCount } = useCart()
+  const { theme } = useTheme()
+  const logoColor = theme === 'light' ? 'black' : 'white'
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 border-b border-theme-border bg-theme-surface backdrop-blur-md">
       <div className="flex h-16 w-full items-center justify-between pl-4 pr-5 sm:pl-5 sm:pr-6 lg:pl-8 lg:pr-10">
         <Link to="/" className="flex shrink-0 items-center" aria-label="OTHER SIDE home">
-          <Logo className="h-11 w-[88px] sm:h-12 sm:w-[96px] lg:h-[52px] lg:w-[104px]" />
+          <Logo className="h-11 w-[88px] sm:h-12 sm:w-[96px] lg:h-[52px] lg:w-[104px]" color={logoColor} />
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex xl:gap-8" aria-label="Main navigation">

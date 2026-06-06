@@ -60,6 +60,8 @@ jobs:
       contents: read
       deployments: write
     steps:
+      - uses: actions/checkout@v4
+
       - name: Download Pages artifact
         uses: actions/download-artifact@v4
         with:
@@ -71,7 +73,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy client/dist --project-name=${{ env.PAGES_PROJECT }} --branch=main
+          workingDirectory: client
+          command: pages deploy dist --project-name=${{ env.PAGES_PROJECT }} --branch=main
 
   deploy-api:
     name: Deploy API (Workers Container)

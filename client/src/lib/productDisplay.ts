@@ -1,9 +1,10 @@
 /** Clean Instagram-imported titles for storefront display */
 export function displayProductName(name: string): string {
-  const cleaned = name
+  let cleaned = name
     .replace(/^["'""]+|["'""]+$/g, '')
     .replace(/\s{2,}/g, ' ')
     .trim()
+  if (/^tyled to perfection/i.test(cleaned)) cleaned = `S${cleaned}`
   if (!cleaned || cleaned.length < 2) return 'Otherside Look'
   if (cleaned.length > 72) return `${cleaned.slice(0, 69)}…`
   return cleaned

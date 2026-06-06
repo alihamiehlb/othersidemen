@@ -2,24 +2,51 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
-import { ProductModal } from '@/components/ui/ProductModal'
-import { useProductModal } from '@/hooks/useProductModal'
 import { api } from '@/lib/api'
+import { loadCatalogPreview } from '@/lib/catalogPreview'
+import { dedupeByLookGroup, previewSection } from '@/lib/lookGroups'
 
 export function NewInSection() {
   const [products, setProducts] = useState<ProductCardData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const { selected, loading: modalLoading, openProduct, closeProduct } = useProductModal()
 
   useEffect(() => {
-    api<ProductCardData[]>('/api/products?featured=true&limit=6', {}, 4)
-      .then((res) => {
-        if (res.success && res.data) setProducts(res.data)
+    let cancelled = false
+
+    const load = async () => {
+      try {
+        const res = await api<ProductCardData[]>('/api/products?featured=true&limit=24', {}, 2)
+        if (!cancelled && res.success && res.data?.length) {
+          const unique = dedupeByLookGroup(res.data).slice(0, 6)
+          if (unique.length) {
+            setProducts(unique)
+            return
+          }
+        }
+      } catch {
+        /* fallback below */
+      }
+
+      const preview = await loadCatalogPreview()
+      if (!cancelled) {
+        const fallback = previewSection(preview, 'newIn').slice(0, 6)
+        if (fallback.length) setProducts(fallback)
         else setError(true)
+      }
+    }
+
+    load()
+      .catch(() => {
+        if (!cancelled) setError(true)
       })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   return (
@@ -41,18 +68,10 @@ export function NewInSection() {
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {products.map((product, i) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              index={i}
-              showWishlist
-              onSelect={(p) => void openProduct(p)}
-            />
+            <ProductCard key={product._id} product={product} index={i} showWishlist />
           ))}
         </div>
       </div>
-
-      <ProductModal product={selected} loading={modalLoading} onClose={closeProduct} />
     </section>
   )
 }

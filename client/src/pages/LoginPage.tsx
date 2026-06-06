@@ -66,6 +66,10 @@ export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | '
           <>
             <a
               href="/api/auth/google"
+              onClick={(e) => {
+                e.preventDefault()
+                window.location.assign('/api/auth/google')
+              }}
               className="mb-6 flex w-full items-center justify-center gap-3 border border-white/20 px-6 py-3 text-xs font-semibold uppercase tracking-widest transition-colors hover:bg-white/5"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">

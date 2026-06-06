@@ -64,27 +64,45 @@ export function HeroSection() {
 
       <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col justify-end lg:grid lg:grid-cols-2 lg:justify-center">
         <div className="flex flex-col justify-end px-5 pb-10 sm:px-8 sm:pb-12 lg:justify-center lg:px-12 lg:py-16 xl:px-20">
-          <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.3em] text-brand-muted sm:mb-4">
-            OTHERSIDE DNA — MEN
-          </p>
-          <h1 className="mb-4 text-3xl font-black uppercase leading-[0.95] tracking-tight text-balance sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-            Two Sides.
-            <br />
-            One Identity.
-          </h1>
-          <p className="mb-6 max-w-md text-sm leading-relaxed text-brand-muted sm:mb-8 lg:mb-10">
-            Tailored for modern men. Designed to make every side yours.
-          </p>
-          <div className="flex flex-col gap-3 min-[400px]:flex-row min-[400px]:gap-4">
-            <Link to="/shop">
-              <Button variant="solid" className="w-full min-[400px]:w-auto">Shop Men&apos;s Collection</Button>
-            </Link>
-            <Link to="/shop?category=looks">
-              <Button variant="outline" className="w-full min-[400px]:w-auto">New Arrivals</Button>
-            </Link>
+          <div
+            className={`max-w-lg rounded-sm px-1 py-2 lg:max-w-xl ${
+              isLight ? 'bg-white/75 backdrop-blur-sm' : 'bg-black/45 backdrop-blur-[2px]'
+            }`}
+          >
+            <p
+              className={`mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] sm:mb-4 ${
+                isLight ? 'text-neutral-700' : 'text-white/85'
+              }`}
+            >
+              OTHERSIDE DNA — MEN
+            </p>
+            <h1
+              className={`mb-4 text-3xl font-black uppercase leading-[0.95] tracking-tight text-balance sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl ${
+                isLight ? 'text-neutral-950' : 'text-white drop-shadow-lg'
+              }`}
+            >
+              Two Sides.
+              <br />
+              One Identity.
+            </h1>
+            <p
+              className={`mb-6 max-w-md text-sm leading-relaxed sm:mb-8 lg:mb-10 ${
+                isLight ? 'text-neutral-800' : 'text-white/90'
+              }`}
+            >
+              Tailored for modern men. Designed to make every side yours.
+            </p>
+            <div className="flex flex-col gap-3 min-[400px]:flex-row min-[400px]:gap-4">
+              <Link to="/shop">
+                <Button variant="solid" className="w-full min-[400px]:w-auto">Shop Men&apos;s Collection</Button>
+              </Link>
+              <Link to="/shop?category=looks">
+                <Button variant="outline" className="w-full min-[400px]:w-auto">New Arrivals</Button>
+              </Link>
+            </div>
           </div>
 
-          <div className="mt-8 flex items-center gap-2 text-[10px] font-medium uppercase tracking-widest text-brand-muted sm:mt-12 lg:absolute lg:bottom-8 lg:left-12 xl:left-20">
+          <div className={`mt-8 flex items-center gap-2 text-[10px] font-medium uppercase tracking-widest sm:mt-12 lg:absolute lg:bottom-8 lg:left-12 xl:left-20 ${isLight ? 'text-neutral-600' : 'text-white/70'}`}>
             <span>Scroll to Discover</span>
             <ChevronDown size={14} className="animate-bounce" />
           </div>
