@@ -2,6 +2,8 @@ import { Container, getContainer } from '@cloudflare/containers'
 
 export interface Env {
   TWOSIDE_SERVER: DurableObjectNamespace<TwosideServer>
+  API_RATE_LIMITER?: { limit: (opts: { key: string }) => Promise<{ success: boolean }> }
+  AUTH_RATE_LIMITER?: { limit: (opts: { key: string }) => Promise<{ success: boolean }> }
   MONGODB_URI: string
   REDIS_URL?: string
   JWT_SECRET: string
@@ -64,6 +66,23 @@ export class TwosideServer extends Container<Env> {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url)
+    const clientIp = request.headers.get('CF-Connecting-IP') ?? 'unknown'
+    const limiter = url.pathname.startsWith('/api/auth') ? env.AUTH_RATE_LIMITER : env.API_RATE_LIMITER
+
+    if (limiter) {
+      const { success } = await limiter.limit({ key: clientIp })
+      if (!success) {
+        return Response.json(
+          { success: false, data: null, error: 'Too many requests. Please slow down.' },
+          {
+            status: 429,
+            headers: { 'Access-Control-Allow-Origin': env.CORS_ORIGIN ?? 'null' },
+          },
+        )
+      }
+    }
+
     try {
       const container = getContainer(env.TWOSIDE_SERVER)
       return await container.fetch(request)
