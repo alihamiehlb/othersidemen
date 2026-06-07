@@ -29,6 +29,10 @@ coverage/
 .tools/
 graphify-out/
 
+# Client-facing docs — local only, never commit
+CLIENT-MEETING-GUIDE.docx
+scripts/generate-client-meeting-docx.py
+
 # Keep the images directory but ignore temp uploads; allow processed WebP assets
 client/public/images/*
 !client/public/images/.gitkeep
