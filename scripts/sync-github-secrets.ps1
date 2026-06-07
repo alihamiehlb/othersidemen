@@ -45,6 +45,15 @@ Write-Host "Syncing GitHub secrets/variables for $Repo ..."
 $secretMap = @{
   VITE_WHATSAPP_NUMBER = $envMap["VITE_WHATSAPP_NUMBER"]
   VITE_TURNSTILE_SITE_KEY = $envMap["VITE_TURNSTILE_SITE_KEY"]
+  CLOUDFLARE_API_TOKEN = $envMap["CLOUDFLARE_API_TOKEN"]
+}
+
+# Also read root .env for CLOUDFLARE_API_TOKEN if not in server/.env
+if ([string]::IsNullOrWhiteSpace($secretMap["CLOUDFLARE_API_TOKEN"]) -and (Test-Path ".env")) {
+  $rootMap = Read-DotEnv ".env"
+  if ($rootMap.ContainsKey("CLOUDFLARE_API_TOKEN")) {
+    $secretMap["CLOUDFLARE_API_TOKEN"] = $rootMap["CLOUDFLARE_API_TOKEN"]
+  }
 }
 
 foreach ($entry in $secretMap.GetEnumerator()) {
@@ -70,6 +79,8 @@ foreach ($entry in $varMap.GetEnumerator()) {
 }
 
 Write-Host ""
-Write-Host "Done. Required for deploy: CLOUDFLARE_API_TOKEN (set manually in GitHub if not already)."
-Write-Host "Optional: VITE_TURNSTILE_SITE_KEY - add to server/.env or Cloudflare Turnstile dashboard, then re-run."
+Write-Host "Done."
+if ([string]::IsNullOrWhiteSpace($secretMap["CLOUDFLARE_API_TOKEN"])) {
+  Write-Host "Tip: paste CLOUDFLARE_API_TOKEN into server/.env then re-run to sync deploy token."
+}
 Write-Host "Re-run deploy workflow: deploy-cloudflare.yml on GitHub Actions"
