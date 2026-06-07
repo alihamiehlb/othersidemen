@@ -28,7 +28,7 @@ export function HeroSection() {
             <img
               src={HERO_DESKTOP}
               alt="OTHER SIDE Men — dark and light streetwear"
-              className={`h-full w-full object-cover object-[50%_42%] transition-opacity duration-700 sm:object-[50%_40%] lg:object-[50%_35%] ${loaded ? 'opacity-100' : 'opacity-0'} ${isLight ? 'brightness-[1.03] contrast-[0.98]' : ''}`}
+              className={`h-full w-full object-cover transition-opacity duration-700 max-lg:object-[50%_18%] lg:object-[50%_35%] ${loaded ? 'opacity-100' : 'opacity-0'} ${isLight ? 'max-lg:brightness-[1.02] lg:brightness-[1.03] contrast-[0.98]' : 'max-lg:brightness-[1.05]'}`}
               fetchPriority="high"
               decoding="async"
               onLoad={() => setLoaded(true)}
@@ -45,15 +45,15 @@ export function HeroSection() {
           aria-hidden="true"
         />
         <div
-          className={`hero-mobile-overlay absolute inset-x-0 bottom-0 h-[70%] lg:hidden ${isLight ? 'hero-overlay-light' : 'hero-overlay-dark'}`}
+          className={`hero-mobile-overlay absolute inset-x-0 bottom-0 h-[48%] lg:hidden ${isLight ? 'hero-overlay-light' : 'hero-overlay-dark'}`}
           aria-hidden="true"
         />
         <div
-          className={`hero-bottom-fade absolute inset-x-0 bottom-0 h-32 sm:h-40 ${isLight ? 'hero-fade-light' : 'hero-fade-dark'}`}
+          className={`hero-bottom-fade absolute inset-x-0 bottom-0 h-24 sm:h-32 lg:h-40 ${isLight ? 'hero-fade-light' : 'hero-fade-dark'}`}
           aria-hidden="true"
         />
         <div
-          className={`absolute inset-x-0 top-0 h-20 ${isLight ? 'bg-gradient-to-b from-white/70 to-transparent' : 'bg-gradient-to-b from-black/50 to-transparent'}`}
+          className={`absolute inset-x-0 top-0 h-16 lg:h-20 ${isLight ? 'bg-gradient-to-b from-white/40 to-transparent' : 'bg-gradient-to-b from-black/35 to-transparent'}`}
           aria-hidden="true"
         />
         <div
@@ -63,24 +63,18 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 flex min-h-[calc(100svh-4rem)] flex-col justify-end lg:grid lg:grid-cols-2 lg:justify-center">
-        <div className="flex flex-col justify-end px-4 pb-[max(2.5rem,env(safe-area-inset-bottom))] sm:px-8 sm:pb-12 lg:justify-center lg:px-10 lg:py-16 xl:px-24">
-          <div
-            className={`hero-cta-panel w-full max-w-xl px-6 py-7 shadow-lg sm:max-w-2xl sm:px-8 sm:py-9 lg:max-w-2xl lg:px-10 lg:py-10 ${
-              isLight
-                ? 'border border-black/10 bg-white/92 shadow-[0_12px_48px_rgb(0_0_0_/_0.12)] backdrop-blur-md'
-                : 'border border-white/15 bg-black/55 shadow-[0_12px_48px_rgb(0_0_0_/_0.45)] backdrop-blur-md'
-            }`}
-          >
+        <div className="flex flex-col justify-end px-4 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-6 sm:pb-10 lg:justify-center lg:px-10 lg:py-16 xl:px-24">
+          <div className="hero-cta-panel hero-glass-panel mx-auto w-full max-w-md px-5 py-5 sm:max-w-xl sm:px-7 sm:py-7 lg:mx-0 lg:max-w-2xl lg:px-10 lg:py-10">
             <p
-              className={`mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] sm:mb-4 ${
-                isLight ? 'text-neutral-600' : 'text-white/85'
+              className={`mb-2 text-[10px] font-semibold uppercase tracking-[0.28em] sm:mb-3 sm:tracking-[0.3em] ${
+                isLight ? 'text-neutral-800/90' : 'text-white/85'
               }`}
             >
               OTHERSIDE DNA — MEN
             </p>
             <h1
-              className={`mb-4 text-3xl font-black uppercase leading-[0.95] tracking-tight text-balance sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl ${
-                isLight ? 'text-neutral-950' : 'text-white drop-shadow-lg'
+              className={`mb-3 text-[1.65rem] font-black uppercase leading-[0.95] tracking-tight text-balance sm:mb-5 sm:text-4xl md:text-5xl lg:mb-6 lg:text-6xl xl:text-7xl ${
+                isLight ? 'text-neutral-950' : 'text-white drop-shadow-md'
               }`}
             >
               Two Sides.
@@ -88,21 +82,27 @@ export function HeroSection() {
               One Identity.
             </h1>
             <p
-              className={`mb-6 max-w-md text-sm leading-relaxed sm:mb-8 lg:mb-10 ${
-                isLight ? 'text-neutral-700' : 'text-white/90'
+              className={`mb-5 max-w-md text-sm leading-relaxed sm:mb-7 lg:mb-10 ${
+                isLight ? 'text-neutral-800/90' : 'text-white/90'
               }`}
             >
               Tailored for modern men. Designed to make every side yours.
             </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-4">
               <Link to="/shop" className="w-full sm:w-auto">
-                <Button variant="solid" fullWidth className="sm:w-auto">Shop Men&apos;s Collection</Button>
+                <Button
+                  variant="solid"
+                  fullWidth
+                  className={`sm:w-auto ${isLight ? 'bg-neutral-950 text-white hover:bg-neutral-800' : ''}`}
+                >
+                  Shop Men&apos;s Collection
+                </Button>
               </Link>
               <Link to="/shop?category=looks" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
                   fullWidth
-                  className={`sm:w-auto ${isLight ? 'border-neutral-900/80 hover:bg-neutral-900 hover:text-white' : ''}`}
+                  className={`sm:w-auto ${isLight ? 'border-neutral-900/70 text-neutral-950 hover:bg-neutral-950 hover:text-white' : 'border-white/70'}`}
                 >
                   New Arrivals
                 </Button>
@@ -110,7 +110,11 @@ export function HeroSection() {
             </div>
           </div>
 
-          <div className={`mt-8 flex items-center gap-2 text-[10px] font-medium uppercase tracking-widest sm:mt-12 lg:absolute lg:bottom-8 lg:left-12 xl:left-20 ${isLight ? 'text-neutral-600' : 'text-white/70'}`}>
+          <div
+            className={`mt-5 flex items-center justify-center gap-2 text-[10px] font-medium uppercase tracking-widest sm:mt-8 lg:absolute lg:bottom-8 lg:left-12 lg:justify-start xl:left-20 ${
+              isLight ? 'text-neutral-800/80' : 'text-white/75 drop-shadow-sm'
+            }`}
+          >
             <span>Scroll to Discover</span>
             <ChevronDown size={14} className="animate-bounce" />
           </div>

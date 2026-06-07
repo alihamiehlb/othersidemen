@@ -13,6 +13,7 @@ env:
   PAGES_PROJECT: twoside-store
   NODE_VERSION: '22'
   CLOUDFLARE_ACCOUNT_ID: fc8761363df4a7a310cc35ed41d1c809
+  WRANGLER_VERSION: '4.98.0'
 
 jobs:
   build:
@@ -42,9 +43,10 @@ jobs:
       - name: Build client
         run: npm run build:client
         env:
-          VITE_API_URL: ''
-          VITE_CDN_URL: ''
-          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+          VITE_API_URL: ${{ vars.VITE_API_URL || '' }}
+          VITE_CDN_URL: ${{ vars.VITE_CDN_URL || '' }}
+          VITE_WHATSAPP_NUMBER: ${{ secrets.VITE_WHATSAPP_NUMBER || '' }}
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY || '' }}
 
       - name: Upload Pages artifact
         uses: actions/upload-artifact@v4
@@ -61,10 +63,10 @@ jobs:
       contents: read
       deployments: write
     steps:
-      - name: Require Cloudflare secrets
+      - name: Require Cloudflare token
         run: |
           if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
-            echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN — add it in repo Settings → Secrets"
+            echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN"
             exit 1
           fi
 
@@ -76,14 +78,18 @@ jobs:
           name: pages-dist
           path: client/dist
 
+      - name: Verify artifact
+        run: |
+          test -f client/dist/index.html
+          test -f client/dist/images/hero.webp
+          ls -lh client/dist/images/hero.webp
+
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: client
-          wranglerVersion: '4.98.0'
-          command: pages deploy dist --project-name=${{ env.PAGES_PROJECT }} --branch=main --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+        working-directory: client
+        run: npx wrangler@${{ env.WRANGLER_VERSION }} pages deploy dist --project-name=${{ env.PAGES_PROJECT }} --branch=main --commit-dirty=true
 
   deploy-api:
     name: Deploy API (Workers Container)
@@ -92,10 +98,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Require Cloudflare secrets
+      - name: Require Cloudflare token
         run: |
           if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
-            echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN — add it in repo Settings → Secrets"
+            echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN"
             exit 1
           fi
 
@@ -104,21 +110,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install root dependencies (wrangler schema + monorepo)
+        run: npm ci --include=optional
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Verify Docker daemon
+        run: docker info
 
       - name: Install API worker dependencies
         working-directory: cloudflare/api
         run: npm install
 
       - name: Deploy API container
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: cloudflare/api
-          wranglerVersion: '4.98.0'
-          command: deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+        working-directory: cloudflare/api
+        run: npx wrangler@${{ env.WRANGLER_VERSION }} deploy

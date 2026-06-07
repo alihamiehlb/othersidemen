@@ -136,6 +136,35 @@
     overflow: hidden;
   }
 
+  /* Frosted hero card — transparent with white accent in both themes */
+  .hero-glass-panel {
+    border: 1px solid rgb(255 255 255 / 0.38);
+    background: rgb(0 0 0 / 0.22);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow:
+      0 12px 40px rgb(0 0 0 / 0.28),
+      inset 0 1px 0 rgb(255 255 255 / 0.12);
+  }
+
+  html[data-theme="light"] .hero-glass-panel {
+    border-color: rgb(255 255 255 / 0.72);
+    background: rgb(255 255 255 / 0.28);
+    box-shadow:
+      0 12px 40px rgb(0 0 0 / 0.12),
+      inset 0 1px 0 rgb(255 255 255 / 0.85);
+  }
+
+  @media (max-width: 1023px) {
+    .hero-glass-panel {
+      background: rgb(0 0 0 / 0.18);
+    }
+
+    html[data-theme="light"] .hero-glass-panel {
+      background: rgb(255 255 255 / 0.22);
+    }
+  }
+
   @media (min-width: 640px) {
     .hero-cta-panel {
       border-radius: 2.25rem;
@@ -188,19 +217,46 @@
   }
 
   .hero-overlay-dark {
-    background: linear-gradient(to top, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.45), transparent);
+    background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0.28), transparent);
   }
 
   .hero-overlay-light {
-    background: linear-gradient(to top, rgb(255 255 255 / 0.92), rgb(255 255 255 / 0.5), transparent);
+    background: linear-gradient(to top, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0.25), transparent);
+  }
+
+  @media (max-width: 1023px) {
+    .hero-overlay-dark {
+      background: linear-gradient(
+        to top,
+        rgb(0 0 0 / 0.55) 0%,
+        rgb(0 0 0 / 0.18) 45%,
+        transparent 72%
+      );
+    }
+
+    .hero-overlay-light {
+      background: linear-gradient(
+        to top,
+        rgb(255 255 255 / 0.5) 0%,
+        rgb(255 255 255 / 0.12) 45%,
+        transparent 72%
+      );
+    }
   }
 
   .hero-fade-dark {
-    background: linear-gradient(to top, rgb(0 0 0), rgb(0 0 0 / 0.5), transparent);
+    background: linear-gradient(to top, rgb(0 0 0 / 0.85), rgb(0 0 0 / 0.35), transparent);
   }
 
   .hero-fade-light {
-    background: linear-gradient(to top, rgb(255 255 255), rgb(255 255 255 / 0.55), transparent);
+    background: linear-gradient(to top, rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.35), transparent);
+  }
+
+  @media (max-width: 1023px) {
+    .hero-fade-dark,
+    .hero-fade-light {
+      height: 5rem;
+    }
   }
 
   .safe-top {
