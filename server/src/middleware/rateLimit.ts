@@ -50,3 +50,15 @@ export const healthLimiter = rateLimit({
   legacyHeaders: false,
   store: makeStore('health'),
 })
+
+// Payment webhooks arrive from the provider and may legitimately retry; keep the
+// limit generous but bounded to blunt a spoofed-webhook flood (signature still
+// rejects forgeries — this just caps the work spent verifying them).
+export const webhookLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  store: makeStore('webhook'),
+  message: { success: false, data: null, error: 'Too many requests.' },
+})

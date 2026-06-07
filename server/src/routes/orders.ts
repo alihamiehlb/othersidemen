@@ -7,7 +7,7 @@ import { Order } from '../models/Order.js'
 import { Product } from '../models/Product.js'
 import { orderCreateScope, orderListFilter, orderReadFilter, policyContextFromAuth, PolicyError } from '../policies/accessPolicies.js'
 import { cartTotal, clearCart, getCart, resolveCartKey, type CartItem } from '../services/cart.js'
-import { createWhishCheckout } from '../services/whishPay.js'
+import { getProvider } from '../services/payments/index.js'
 import { env } from '../config/env.js'
 import { sendError, sendSuccess } from '../utils/apiResponse.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
@@ -120,7 +120,8 @@ ordersRouter.post('/checkout', asyncHandler(async (req, res) => {
 
   let whishCheckoutUrl: string | undefined
   if (paymentMethod === 'whish') {
-    const whish = await createWhishCheckout({
+    const provider = getProvider()
+    const checkout = await provider.createCheckout({
       orderId: order.id,
       amount: total,
       currency: 'USD',
@@ -128,14 +129,18 @@ ordersRouter.post('/checkout', asyncHandler(async (req, res) => {
       customerPhone: parsed.data.shippingAddress.phone,
       returnUrl: `${env.CLIENT_URL}/order/success?orderId=${order.id}`,
     })
-    if (whish.checkoutUrl) {
-      whishCheckoutUrl = whish.checkoutUrl
-      await Order.findByIdAndUpdate(order.id, { whishCheckoutUrl })
-    } else if (whish.configured) {
-      sendError(res, whish.message, 502)
+    if (checkout.checkoutUrl) {
+      whishCheckoutUrl = checkout.checkoutUrl
+      await Order.findByIdAndUpdate(order.id, {
+        whishCheckoutUrl: checkout.checkoutUrl,
+        paymentProvider: provider.name,
+        paymentRef: checkout.paymentRef,
+      })
+    } else if (checkout.configured) {
+      sendError(res, checkout.message, 502)
       return
     } else {
-      sendError(res, whish.message, 503)
+      sendError(res, checkout.message, 503)
       return
     }
   }

@@ -12,13 +12,13 @@ import { configurePassport } from './config/passport.js'
 import { getRedisClient } from './config/redis.js'
 import { csrfProtection, generateCsrfToken } from './middleware/csrf.js'
 import { errorHandler } from './middleware/errorHandler.js'
-import { globalLimiter, healthLimiter } from './middleware/rateLimit.js'
+import { globalLimiter, healthLimiter, webhookLimiter } from './middleware/rateLimit.js'
 import { adminRouter } from './routes/admin/index.js'
 import { authRouter } from './routes/auth.js'
 import { cartRouter } from './routes/cart.js'
 import { healthRouter } from './routes/health.js'
 import { ordersRouter } from './routes/orders.js'
-import { paymentsRouter } from './routes/payments.js'
+import { paymentsRouter, webhookHandler } from './routes/payments.js'
 import { productsRouter } from './routes/products.js'
 import { whatsappRouter } from './routes/whatsapp.js'
 import { sendSuccess } from './utils/apiResponse.js'
@@ -48,6 +48,17 @@ app.use(cors({
 }))
 
 app.use(globalLimiter)
+
+// Payment webhook MUST receive the raw body for HMAC verification, so it is
+// mounted BEFORE express.json / mongoSanitize / hpp — those would parse and
+// mutate the bytes and break the signature. Keep this above the JSON parser.
+app.post(
+  '/api/payments/webhook',
+  webhookLimiter,
+  express.raw({ type: '*/*', limit: '100kb' }),
+  webhookHandler,
+)
+
 app.use(express.json({ limit: '10kb' }))
 app.use(express.urlencoded({ extended: true, limit: '10kb' }))
 app.use(cookieParser())
@@ -78,7 +89,24 @@ app.get('/api', (_req, res) => {
 
 app.use(errorHandler)
 
+function assertPaymentConfig(): void {
+  if (env.PAYMENT_MODE !== 'live') return
+  const missing = [
+    !env.WHISH_WEBHOOK_SECRET && 'WHISH_WEBHOOK_SECRET',
+    !env.WHISH_API_KEY && 'WHISH_API_KEY',
+    !env.WHISH_MERCHANT_ID && 'WHISH_MERCHANT_ID',
+    !env.WHISH_API_URL && 'WHISH_API_URL',
+  ].filter(Boolean)
+  if (missing.length === 0) return
+  // Without these, live payments silently fail (webhooks rejected, checkout dead).
+  console.error(`[payments] PAYMENT_MODE=live but missing: ${missing.join(', ')}`)
+  if (env.NODE_ENV === 'production') process.exit(1)
+  console.warn('[payments] continuing in non-production — set the secrets or use PAYMENT_MODE=mock')
+}
+
 async function start() {
+  assertPaymentConfig()
+
   const server = app.listen(env.PORT, '0.0.0.0', () => {
     console.log(`[server] Listening on 0.0.0.0:${env.PORT}`)
   })

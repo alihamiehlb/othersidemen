@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import { getRedisClient } from '../config/redis.js'
-import { getPaymentConfig } from '../services/whishPay.js'
+import { getPaymentConfig } from '../services/payments/index.js'
 import { env } from '../config/env.js'
 import { sendError, sendSuccess } from '../utils/apiResponse.js'
 

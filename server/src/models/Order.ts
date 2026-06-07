@@ -22,6 +22,9 @@ export interface IOrder extends Document {
   status: OrderStatus
   paymentMethod: PaymentMethod
   paymentStatus: PaymentStatus
+  paymentProvider?: string
+  paymentRef?: string
+  paidAt?: Date
   whishCheckoutUrl?: string
   shippingAddress: {
     fullName: string
@@ -64,6 +67,9 @@ const orderSchema = new Schema<IOrder>(
       enum: ['pending', 'paid', 'failed', 'refunded'],
       default: 'pending',
     },
+    paymentProvider: { type: String },
+    paymentRef: { type: String, unique: true, sparse: true },
+    paidAt: { type: Date },
     whishCheckoutUrl: { type: String },
     shippingAddress: {
       fullName: { type: String, required: true },

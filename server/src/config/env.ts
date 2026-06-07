@@ -16,9 +16,11 @@ const envSchema = z.object({
   ADMIN_EMAIL: z.string().email().optional(),
   TURNSTILE_SECRET_KEY: z.string().optional(),
   RECAPTCHA_SECRET_KEY: z.string().optional(), // deprecated — use TURNSTILE_SECRET_KEY
+  PAYMENT_MODE: z.enum(['mock', 'live']).default('mock'),
   WHISH_MERCHANT_ID: z.string().optional(),
   WHISH_API_KEY: z.string().optional(),
   WHISH_API_URL: z.preprocess((v) => (v === '' ? undefined : v), z.string().url().optional()),
+  WHISH_WEBHOOK_SECRET: z.string().optional(),
   WHATSAPP_NUMBER: z.string().optional(),
 })
 
