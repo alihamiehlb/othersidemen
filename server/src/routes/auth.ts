@@ -38,6 +38,7 @@ authRouter.get('/config', (_req, res) => {
   sendSuccess(res, {
     googleEnabled: Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
     emailAuthEnabled: true,
+    turnstileEnabled: Boolean(env.TURNSTILE_SECRET_KEY),
   })
 })
 

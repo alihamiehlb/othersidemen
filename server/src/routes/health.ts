@@ -39,7 +39,7 @@ healthRouter.get('/', async (_req, res) => {
             mongodb,
             redis,
             googleOAuth: Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
-            captcha: Boolean(env.RECAPTCHA_SECRET_KEY),
+            captcha: Boolean(env.TURNSTILE_SECRET_KEY),
             whishPay: getPaymentConfig().whishEnabled,
           },
           environment: env.NODE_ENV,

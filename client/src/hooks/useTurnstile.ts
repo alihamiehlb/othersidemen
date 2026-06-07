@@ -5,7 +5,9 @@ const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? ''
 declare global {
   interface Window {
     turnstile?: {
+      ready: (callback: () => void) => void
       render: (container: HTMLElement, options: Record<string, unknown>) => string
+      execute: (widgetId: string) => void
       getResponse: (widgetId: string) => string
       reset: (widgetId: string) => void
       remove: (widgetId: string) => void
@@ -31,9 +33,23 @@ function loadTurnstileScript(): Promise<void> {
   return scriptPromise
 }
 
+function waitForTurnstileReady(): Promise<void> {
+  return new Promise((resolve) => {
+    if (window.turnstile?.ready) {
+      window.turnstile.ready(() => resolve())
+      return
+    }
+    resolve()
+  })
+}
+
 export function useTurnstile(action: string) {
   const containerRef = useRef<HTMLDivElement>(null)
   const widgetIdRef = useRef<string | null>(null)
+  const pendingRef = useRef<{
+    resolve: (token: string) => void
+    reject: (err: Error) => void
+  } | null>(null)
   const enabled = Boolean(SITE_KEY)
 
   useEffect(() => {
@@ -41,6 +57,7 @@ export function useTurnstile(action: string) {
     let cancelled = false
 
     loadTurnstileScript()
+      .then(() => waitForTurnstileReady())
       .then(() => {
         if (cancelled || !containerRef.current || !window.turnstile) return
         if (widgetIdRef.current) {
@@ -51,12 +68,27 @@ export function useTurnstile(action: string) {
           sitekey: SITE_KEY,
           action,
           size: 'invisible',
+          execution: 'execute',
+          callback: (token: string) => {
+            pendingRef.current?.resolve(token)
+            pendingRef.current = null
+          },
+          'error-callback': () => {
+            pendingRef.current?.reject(new Error('Captcha verification failed'))
+            pendingRef.current = null
+          },
+          'expired-callback': () => {
+            pendingRef.current?.reject(new Error('Captcha expired — try again'))
+            pendingRef.current = null
+          },
         })
       })
       .catch((err) => console.warn('[turnstile]', err))
 
     return () => {
       cancelled = true
+      pendingRef.current?.reject(new Error('Captcha cancelled'))
+      pendingRef.current = null
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current)
         widgetIdRef.current = null
@@ -67,10 +99,21 @@ export function useTurnstile(action: string) {
   const getToken = useCallback(async (): Promise<string | undefined> => {
     if (!enabled) return undefined
     await loadTurnstileScript()
-    if (!widgetIdRef.current || !window.turnstile) return undefined
-    const token = window.turnstile.getResponse(widgetIdRef.current)
-    if (token) window.turnstile.reset(widgetIdRef.current)
-    return token || undefined
+    await waitForTurnstileReady()
+    if (!widgetIdRef.current || !window.turnstile) {
+      throw new Error('Captcha is not ready — refresh and try again')
+    }
+
+    const existing = window.turnstile.getResponse(widgetIdRef.current)
+    if (existing) {
+      window.turnstile.reset(widgetIdRef.current)
+      return existing
+    }
+
+    return new Promise<string>((resolve, reject) => {
+      pendingRef.current = { resolve, reject }
+      window.turnstile!.execute(widgetIdRef.current!)
+    })
   }, [enabled])
 
   return { containerRef, getToken, enabled }

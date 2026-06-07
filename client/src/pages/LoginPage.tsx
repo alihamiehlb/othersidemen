@@ -17,6 +17,7 @@ export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | '
   const [error, setError] = useState(params.get('error') === 'auth_failed' ? 'Google sign-in failed' : '')
   const [loading, setLoading] = useState(false)
   const [googleEnabled, setGoogleEnabled] = useState(true)
+  const [turnstileRequired, setTurnstileRequired] = useState(false)
   const { containerRef: turnstileRef, getToken, enabled: turnstileEnabled } = useTurnstile(mode === 'login' ? 'login' : 'signup')
 
   useEffect(() => {
@@ -24,8 +25,11 @@ export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | '
   }, [params])
 
   useEffect(() => {
-    api<{ googleEnabled: boolean }>('/api/auth/config').then((res) => {
-      if (res.success && res.data) setGoogleEnabled(res.data.googleEnabled)
+    api<{ googleEnabled: boolean; turnstileEnabled?: boolean }>('/api/auth/config').then((res) => {
+      if (res.success && res.data) {
+        setGoogleEnabled(res.data.googleEnabled)
+        setTurnstileRequired(Boolean(res.data.turnstileEnabled))
+      }
     })
   }, [])
 
@@ -33,7 +37,22 @@ export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | '
     e.preventDefault()
     setError('')
     setLoading(true)
-    const captchaToken = await getToken()
+
+    let captchaToken: string | undefined
+    if (turnstileRequired || turnstileEnabled) {
+      try {
+        captchaToken = await getToken()
+      } catch (err) {
+        setLoading(false)
+        setError(err instanceof Error ? err.message : 'Captcha verification failed')
+        return
+      }
+      if (!captchaToken) {
+        setLoading(false)
+        setError('Captcha verification required. Refresh the page and try again.')
+        return
+      }
+    }
 
     const err = mode === 'login'
       ? await login(email, password, captchaToken)
@@ -122,7 +141,15 @@ export function LoginPage({ initialMode = 'login' }: { initialMode?: 'login' | '
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 
-          {turnstileEnabled && <div ref={turnstileRef} className="sr-only" aria-hidden="true" />}
+          {turnstileRequired && !turnstileEnabled && (
+            <p className="text-xs text-amber-400/90">
+              Captcha is enabled on the server but this build is missing the site key. Rebuild after applying Turnstile keys.
+            </p>
+          )}
+
+          {(turnstileEnabled || turnstileRequired) && (
+            <div ref={turnstileRef} className="sr-only" aria-hidden="true" />
+          )}
 
           <Button type="submit" variant="solid" fullWidth disabled={loading}>
             {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
