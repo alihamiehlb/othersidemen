@@ -28,7 +28,7 @@ export function HeroSection() {
             <img
               src={HERO_DESKTOP}
               alt="OTHER SIDE Men — dark and light streetwear"
-              className={`h-full w-full object-cover object-[50%_38%] transition-opacity duration-700 sm:object-[50%_35%] lg:object-[50%_32%] ${loaded ? 'opacity-100' : 'opacity-0'} ${isLight ? 'brightness-[1.03] contrast-[0.98]' : ''}`}
+              className={`h-full w-full object-cover object-[50%_42%] transition-opacity duration-700 sm:object-[50%_40%] lg:object-[50%_35%] ${loaded ? 'opacity-100' : 'opacity-0'} ${isLight ? 'brightness-[1.03] contrast-[0.98]' : ''}`}
               fetchPriority="high"
               decoding="async"
               onLoad={() => setLoaded(true)}

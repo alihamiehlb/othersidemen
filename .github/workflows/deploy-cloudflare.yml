@@ -12,6 +12,7 @@ concurrency:
 env:
   PAGES_PROJECT: twoside-store
   NODE_VERSION: '22'
+  CLOUDFLARE_ACCOUNT_ID: fc8761363df4a7a310cc35ed41d1c809
 
 jobs:
   build:
@@ -60,6 +61,13 @@ jobs:
       contents: read
       deployments: write
     steps:
+      - name: Require Cloudflare secrets
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN — add it in repo Settings → Secrets"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - name: Download Pages artifact
@@ -72,9 +80,10 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: client
-          command: pages deploy dist --project-name=${{ env.PAGES_PROJECT }} --branch=main
+          wranglerVersion: '4.98.0'
+          command: pages deploy dist --project-name=${{ env.PAGES_PROJECT }} --branch=main --commit-dirty=true
 
   deploy-api:
     name: Deploy API (Workers Container)
@@ -83,11 +92,21 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Require Cloudflare secrets
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN — add it in repo Settings → Secrets"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Install API worker dependencies
         working-directory: cloudflare/api
@@ -97,9 +116,9 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: cloudflare/api
+          wranglerVersion: '4.98.0'
           command: deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-

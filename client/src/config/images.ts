@@ -5,8 +5,8 @@
 
 export const IMAGES = {
   hero: {
-    model: '/images/hero.webp' as string | null,
-    modelMobile: '/images/hero-mobile.webp' as string | null,
+    model: '/images/hero.webp?v=20260608' as string | null,
+    modelMobile: '/images/hero-mobile.webp?v=20260608' as string | null,
     dividerBadge: '/images/logo-badge.png' as string | null,
   },
   brand: {
