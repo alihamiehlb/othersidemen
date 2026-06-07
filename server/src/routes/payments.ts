@@ -78,27 +78,42 @@ paymentsRouter.get(
 
 /**
  * Dev-only manual confirmation — stands in for the provider webhook in mock mode.
- * Registered ONLY outside production (see guard below) so it can never flip a
- * real order paid in prod.
+ * Requires auth + owner scope, CSRF, and is disabled in production or live payment mode.
  */
 const mockConfirmSchema = z.object({ orderId: z.string().min(1) })
 
-if (env.NODE_ENV !== 'production') {
-  paymentsRouter.post('/mock/confirm', asyncHandler(async (req, res) => {
-    const parsed = mockConfirmSchema.safeParse(req.body)
-    if (!parsed.success) {
-      sendError(res, 'orderId is required', 400)
-      return
-    }
-    const existing = await Order.findById(parsed.data.orderId)
-    if (!existing) {
-      sendError(res, 'Order not found', 404)
-      return
-    }
-    const settled = await settleOrderPaid({ _id: existing._id }, 'mock/confirm')
-    const order = settled ?? existing
-    sendSuccess(res, { orderId: order.id, paymentStatus: order.paymentStatus, paidAt: order.paidAt ?? null })
-  }))
+if (env.NODE_ENV !== 'production' && env.PAYMENT_MODE !== 'live') {
+  paymentsRouter.post(
+    '/mock/confirm',
+    asyncHandler(requireAuth as (req: Request, res: Response, next: import('express').NextFunction) => Promise<void>),
+    asyncHandler(async (req, res) => {
+      const parsed = mockConfirmSchema.safeParse(req.body)
+      if (!parsed.success) {
+        sendError(res, 'orderId is required', 400)
+        return
+      }
+      const authReq = req as AuthRequest
+      const ctx = policyContextFromAuth(authReq.userId, authReq.currentUser?.role)
+      let filter: Record<string, unknown>
+      try {
+        filter = orderReadFilter(ctx, parsed.data.orderId) as Record<string, unknown>
+      } catch (err) {
+        if (err instanceof PolicyError) {
+          sendError(res, err.message, 403)
+          return
+        }
+        throw err
+      }
+      const existing = await Order.findOne(filter)
+      if (!existing) {
+        sendError(res, 'Order not found', 404)
+        return
+      }
+      const settled = await settleOrderPaid({ _id: existing._id }, 'mock/confirm')
+      const order = settled ?? existing
+      sendSuccess(res, { orderId: order.id, paymentStatus: order.paymentStatus, paidAt: order.paidAt ?? null })
+    }),
+  )
 }
 
 /**

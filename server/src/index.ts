@@ -79,7 +79,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/whatsapp', whatsappRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/cart', csrfProtection, cartRouter)
-app.use('/api/payments', paymentsRouter)
+app.use('/api/payments', csrfProtection, paymentsRouter)
 app.use('/api/orders', csrfProtection, ordersRouter)
 app.use('/api/admin', csrfProtection, adminRouter)
 
