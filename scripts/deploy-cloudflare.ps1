@@ -38,8 +38,10 @@ npm run build:client
 if ($LASTEXITCODE -ne 0) { throw "Client build failed" }
 
 Write-Host "=== 4/4 Deploy Pages ==="
-npx wrangler pages deploy client/dist --project-name=$pagesProject --branch=main
-if ($LASTEXITCODE -ne 0) { throw "Pages deploy failed" }
+Push-Location client
+npx wrangler pages deploy dist --project-name=$pagesProject --branch=main
+if ($LASTEXITCODE -ne 0) { Pop-Location; throw "Pages deploy failed" }
+Pop-Location
 
 Write-Host ""
 Write-Host "Deploy complete."

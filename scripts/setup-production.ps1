@@ -56,7 +56,10 @@ $env:VITE_API_URL = ""
 $env:VITE_CDN_URL = ""
 if ($TurnstileSiteKey) { $env:VITE_TURNSTILE_SITE_KEY = $TurnstileSiteKey }
 npm run build:client
-npx wrangler pages deploy client/dist --project-name=twoside-store --branch=main --commit-dirty=true
+Push-Location client
+npx wrangler pages deploy dist --project-name=twoside-store --branch=main --commit-dirty=true
+if ($LASTEXITCODE -ne 0) { Pop-Location; throw "Pages deploy failed" }
+Pop-Location
 
 Write-Host "=== Deploy API container ==="
 Push-Location cloudflare/api

@@ -63,8 +63,14 @@ if (-not $gh) {
 }
 
 if ($gh) {
-  gh auth status --hostname github.com 2>$null | Out-Null
-  if ($LASTEXITCODE -eq 0) {
+  $ghAuthed = $false
+  try {
+    gh auth status --hostname github.com 2>$null | Out-Null
+    $ghAuthed = ($LASTEXITCODE -eq 0)
+  } catch {
+    $ghAuthed = $false
+  }
+  if ($ghAuthed) {
     Write-Host "Setting GitHub secret VITE_TURNSTILE_SITE_KEY..."
     $SiteKey | gh secret set VITE_TURNSTILE_SITE_KEY --repo $Repo
     Write-Host "GitHub secret updated."
