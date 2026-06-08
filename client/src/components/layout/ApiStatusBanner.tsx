@@ -20,10 +20,11 @@ export function ApiStatusBanner() {
         if (cancelled) return
 
         if (!res.ok || json.data?.status === 'degraded') {
-          const parts: string[] = []
-          if (services?.mongodb !== 'connected') parts.push('Database offline')
-          if (services?.redis === 'error') parts.push('Redis error')
-          setMessage(parts.length ? parts.join(' · ') : 'Some store services are temporarily unavailable.')
+          if (services?.mongodb !== 'connected') {
+            setMessage('Database reconnecting — please wait a moment and refresh.')
+            return
+          }
+          setMessage('Store is temporarily unavailable. Please try again shortly.')
           return
         }
 

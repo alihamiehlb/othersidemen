@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
+import { ensureDbConnected } from '../config/db.js'
 import { cacheGet, cacheSet } from '../config/redis.js'
 import { Product } from '../models/Product.js'
 import { productPublicFilter } from '../policies/accessPolicies.js'
@@ -11,6 +12,11 @@ export const productsRouter = Router()
 const CACHE_TTL = 300
 
 productsRouter.get('/', async (req, res) => {
+  if (!(await ensureDbConnected())) {
+    sendError(res, 'Store is starting up. Please try again.', 503)
+    return
+  }
+
   const { category, featured, search, page = '1', limit = '20' } = req.query
   const pageNum = Math.max(1, parseInt(page as string, 10) || 1)
   const limitNum = Math.min(48, Math.max(1, parseInt(limit as string, 10) || 20))
@@ -44,6 +50,11 @@ productsRouter.get('/', async (req, res) => {
 })
 
 productsRouter.get('/:slug', async (req, res) => {
+  if (!(await ensureDbConnected())) {
+    sendError(res, 'Store is starting up. Please try again.', 503)
+    return
+  }
+
   if (mongoose.Types.ObjectId.isValid(req.params.slug)) {
     sendError(res, 'Product not found', 404)
     return

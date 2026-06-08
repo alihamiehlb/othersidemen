@@ -26,7 +26,7 @@ export interface Env {
 /** Runs the Express API Docker image on Cloudflare Containers */
 export class TwosideServer extends Container<Env> {
   defaultPort = 3001
-  sleepAfter = '15m'
+  sleepAfter = '30m'
   enableInternet = true
 
   private runtimeEnv(): Record<string, string> {

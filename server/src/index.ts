@@ -107,19 +107,6 @@ function assertPaymentConfig(): void {
 async function start() {
   assertPaymentConfig()
 
-  const server = app.listen(env.PORT, '0.0.0.0', () => {
-    console.log(`[server] Listening on 0.0.0.0:${env.PORT}`)
-  })
-
-  server.on('error', (err: NodeJS.ErrnoException) => {
-    if (err.code === 'EADDRINUSE') {
-      console.error(`[server] Port ${env.PORT} already in use`)
-      process.exit(1)
-    }
-    console.error('[server] Listen error:', err)
-    process.exit(1)
-  })
-
   const redis = getRedisClient()
   if (redis) {
     try {
@@ -132,8 +119,21 @@ async function start() {
   try {
     await connectDB()
   } catch (err) {
-    console.error('[mongodb] Initial connection failed — API will serve degraded until Atlas is reachable:', err)
+    console.error('[mongodb] Initial connection failed — data routes retry on each request:', err)
   }
+
+  const server = app.listen(env.PORT, '0.0.0.0', () => {
+    console.log(`[server] Listening on 0.0.0.0:${env.PORT}`)
+  })
+
+  server.on('error', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`[server] Port ${env.PORT} already in use`)
+      process.exit(1)
+    }
+    console.error('[server] Listen error:', err)
+    process.exit(1)
+  })
 }
 
 process.on('unhandledRejection', (reason) => {

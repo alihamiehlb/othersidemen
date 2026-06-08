@@ -27,23 +27,21 @@ async function checkRedis(): Promise<'connected' | 'disabled' | 'error'> {
 
 healthRouter.get('/', async (_req, res) => {
   const [mongodb, redis] = await Promise.all([checkMongo(), checkRedis()])
-  const ok = mongodb === 'connected' && (redis === 'connected' || redis === 'disabled')
+  // Redis is optional cache — only MongoDB availability affects store readiness
+  const ok = mongodb === 'connected'
 
-  const body =
-    env.NODE_ENV === 'production'
-      ? { status: ok ? 'ok' : 'degraded', timestamp: new Date().toISOString() }
-      : {
-          status: ok ? 'ok' : 'degraded',
-          timestamp: new Date().toISOString(),
-          services: {
-            mongodb,
-            redis,
-            googleOAuth: Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
-            captcha: Boolean(env.TURNSTILE_SECRET_KEY),
-            whishPay: getPaymentConfig().whishEnabled,
-          },
-          environment: env.NODE_ENV,
-        }
+  const body = {
+    status: ok ? 'ok' : 'degraded',
+    timestamp: new Date().toISOString(),
+    services: {
+      mongodb,
+      redis,
+      googleOAuth: Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
+      captcha: Boolean(env.TURNSTILE_SECRET_KEY),
+      whishPay: getPaymentConfig().whishEnabled,
+    },
+    ...(env.NODE_ENV !== 'production' ? { environment: env.NODE_ENV } : {}),
+  }
 
   if (ok) {
     sendSuccess(res, body)

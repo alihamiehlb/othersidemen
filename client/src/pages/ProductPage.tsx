@@ -41,15 +41,19 @@ export function ProductPage() {
   const [color, setColor] = useState('')
   const [message, setMessage] = useState('')
   const [adding, setAdding] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
     if (!slug) return
     let cancelled = false
 
     async function load() {
+      setLoading(true)
+      setLoadError(null)
       const currentSlug = slug!
       const [res, group] = await Promise.all([
-        api<Product>(`/api/products/${currentSlug}`, {}, 2),
+        api<Product>(`/api/products/${currentSlug}`, {}, 4),
         loadLookGroup(currentSlug),
       ])
       if (cancelled) return
@@ -64,6 +68,13 @@ export function ProductPage() {
         setGallery(images)
         setSize(defaultSizes(res.data.category, res.data.sizes)[0] ?? 'One Size')
         setColor(defaultColors(res.data.category, res.data.colors)[0] ?? 'As shown')
+        setLoadError(null)
+      } else if (res.error?.toLowerCase().includes('not found')) {
+        setProduct(null)
+        setLoadError(null)
+      } else {
+        setProduct(null)
+        setLoadError(res.error ?? 'Unable to load this product. Please try again.')
       }
       setLoading(false)
     }
@@ -72,9 +83,18 @@ export function ProductPage() {
     return () => {
       cancelled = true
     }
-  }, [slug])
+  }, [slug, reloadKey])
 
   if (loading) return <LoadingScreen message="Loading product" />
+  if (loadError) {
+    return (
+      <ErrorScreen
+        title="Could not load product"
+        message={loadError}
+        onRetry={() => setReloadKey((k) => k + 1)}
+      />
+    )
+  }
   if (!product) return <ErrorScreen title="Product not found" message="This item may no longer be available." />
 
   const title = displayProductName(product.name)

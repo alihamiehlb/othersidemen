@@ -1,5 +1,5 @@
 const API_BASE = import.meta.env.VITE_API_URL ?? ''
-const REQUEST_TIMEOUT_MS = 12_000
+const REQUEST_TIMEOUT_MS = 20_000
 
 let csrfToken: string | null = null
 let csrfFetch: Promise<string> | null = null
@@ -95,11 +95,23 @@ export async function api<T>(
 
       if (lastResult.success) return lastResult
 
+      const retryable = !lastResult.success
+        && attempt < maxAttempts - 1
+        && (
+          lastResult.error?.includes('busy')
+          || lastResult.error?.includes('starting up')
+          || lastResult.error?.includes('connection')
+          || lastResult.error?.includes('reach the store')
+        )
       const csrfRetry = !lastResult.success
         && attempt < maxAttempts - 1
         && (lastResult.error?.includes('session') || lastResult.error?.toLowerCase().includes('csrf'))
       if (csrfRetry) {
         csrfToken = null
+        continue
+      }
+      if (retryable) {
+        await new Promise((resolve) => setTimeout(resolve, 800 * (attempt + 1)))
         continue
       }
 

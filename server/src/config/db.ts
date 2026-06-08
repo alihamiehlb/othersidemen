@@ -25,3 +25,24 @@ export async function connectDB(): Promise<void> {
 mongoose.connection.on('error', (err) => {
   console.error('[mongodb] Error:', err.message)
 })
+
+function isMongoConnected(): boolean {
+  return mongoose.connection.readyState === mongoose.ConnectionStates.connected
+}
+
+/** Wait for or restore MongoDB before handling data routes (container cold starts). */
+export async function ensureDbConnected(): Promise<boolean> {
+  if (isMongoConnected()) return true
+
+  if (mongoose.connection.readyState === mongoose.ConnectionStates.connecting) {
+    await new Promise((resolve) => setTimeout(resolve, 750))
+    if (isMongoConnected()) return true
+  }
+
+  try {
+    await connectDB()
+    return isMongoConnected()
+  } catch {
+    return false
+  }
+}
