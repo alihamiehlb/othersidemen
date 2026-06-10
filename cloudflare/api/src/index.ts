@@ -1,7 +1,9 @@
 import { Container, getContainer } from '@cloudflare/containers'
+import { handleAdminUpload } from './r2Upload.js'
 
 export interface Env {
   TWOSIDE_SERVER: DurableObjectNamespace<TwosideServer>
+  ASSETS?: R2Bucket
   API_RATE_LIMITER?: { limit: (opts: { key: string }) => Promise<{ success: boolean }> }
   AUTH_RATE_LIMITER?: { limit: (opts: { key: string }) => Promise<{ success: boolean }> }
   MONGODB_URI: string
@@ -101,6 +103,9 @@ export default {
     }
 
     try {
+      const uploadResponse = await handleAdminUpload(request, env)
+      if (uploadResponse) return uploadResponse
+
       const container = getContainer(env.TWOSIDE_SERVER)
       return await container.fetch(request)
     } catch (err) {

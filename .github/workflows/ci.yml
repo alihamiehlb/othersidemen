@@ -78,7 +78,7 @@ jobs:
         run: npm run test:e2e
         env:
           PLAYWRIGHT_BASE_URL: https://twoside-store.pages.dev
-          PLAYWRIGHT_CDN_URL: ${{ vars.VITE_CDN_URL }}
+          PLAYWRIGHT_CDN_URL: ${{ vars.VITE_CDN_URL || 'https://pub-9e3df3cf3913429bbaba57ed2d8f6e9b.r2.dev' }}
 
   build:
     runs-on: ubuntu-latest

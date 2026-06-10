@@ -72,6 +72,14 @@ $varMap = @{
   VITE_CDN_URL = ""
 }
 
+$clientEnv = Read-DotEnv "client/.env.production.local"
+if ($clientEnv.ContainsKey("VITE_CDN_URL") -and -not [string]::IsNullOrWhiteSpace($clientEnv["VITE_CDN_URL"])) {
+  $varMap["VITE_CDN_URL"] = $clientEnv["VITE_CDN_URL"]
+}
+if ($envMap.ContainsKey("R2_PUBLIC_URL") -and -not [string]::IsNullOrWhiteSpace($envMap["R2_PUBLIC_URL"])) {
+  $varMap["VITE_CDN_URL"] = $envMap["R2_PUBLIC_URL"]
+}
+
 foreach ($entry in $varMap.GetEnumerator()) {
   Write-Host "  set variable $($entry.Key) = '$($entry.Value)'"
   gh variable set $entry.Key --body $entry.Value --repo $Repo
