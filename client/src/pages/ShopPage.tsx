@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { LoadingScreen } from '@/components/branding/LoadingScreen'
@@ -8,7 +8,7 @@ import { ErrorScreen } from '@/components/branding/ErrorScreen'
 import { ProductCard, type ProductCardData } from '@/components/ui/ProductCard'
 
 import { ProductModal } from '@/components/ui/ProductModal'
-import { SeoHead } from '@/components/seo/SeoHead'
+import { SeoHead, buildBreadcrumbJsonLd, buildItemListJsonLd } from '@/components/seo/SeoHead'
 import { useProductModal } from '@/hooks/useProductModal'
 import { api } from '@/lib/api'
 import { loadCatalogPreview, previewProducts, previewProductTotal } from '@/lib/catalogPreview'
@@ -108,15 +108,43 @@ export function ShopPage() {
     void openProduct(product)
   }
 
+  const canonicalPath = category === 'all' ? '/shop' : `/shop?category=${category}`
+  const shopTitle =
+    category === 'all'
+      ? "Shop All — Men's Streetwear"
+      : `Shop ${category.charAt(0).toUpperCase() + category.slice(1)} — Men's Streetwear`
+  const shopDescription =
+    category === 'all'
+      ? "Browse the full OTHER SIDE men's collection — 791+ looks, outerwear, tops, footwear, and accessories. Based in Lebanon, ships worldwide."
+      : `Shop OTHER SIDE ${category} — premium men's streetwear from Baabda, Lebanon.`
+
+  const shopJsonLd = useMemo(
+    () => [
+      buildBreadcrumbJsonLd([
+        { name: 'Home', path: '/' },
+        { name: 'Shop', path: '/shop' },
+        ...(category !== 'all'
+          ? [{ name: category.charAt(0).toUpperCase() + category.slice(1), path: canonicalPath }]
+          : []),
+      ]),
+      buildItemListJsonLd(
+        products.slice(0, 24).map((p) => ({ name: p.name, slug: p.slug })),
+        shopTitle,
+      ),
+    ],
+    [products, category, canonicalPath, shopTitle],
+  )
+
   if (loading) return <LoadingScreen message="Loading collection" />
   if (error) return <ErrorScreen title="Collection unavailable" onRetry={() => window.location.reload()} />
 
   return (
     <>
       <SeoHead
-        title="Shop All — Men's Streetwear"
-        description="Browse the full OTHER SIDE men's collection — outerwear, tops, footwear, and accessories."
-        canonicalPath="/shop"
+        title={shopTitle}
+        description={shopDescription}
+        canonicalPath={canonicalPath}
+        jsonLd={shopJsonLd}
       />
     <div className="page-enter section-shell">
       <div className="store-container">

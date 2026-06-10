@@ -1,16 +1,12 @@
 interface WhatsAppOrder {
-  name: string
-  price: number
   size: string
   color: string
   slug: string
 }
 
-/** Same-origin API redirect → server builds wa.me URL (phone in Worker secrets). */
+/** Same-origin API redirect — server loads price/name from DB (not query params). */
 export function buildWhatsAppOrderUrl(order: WhatsAppOrder): string {
   const params = new URLSearchParams({
-    name: order.name,
-    price: order.price.toFixed(2),
     size: order.size,
     color: order.color,
     slug: order.slug,

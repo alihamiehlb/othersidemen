@@ -62,9 +62,9 @@ export function resolveCartKey(ctx: PolicyContext, cookieCartId?: string): strin
 
 
 
-export async function getCart(cartKey: string, ctx: PolicyContext): Promise<Cart> {
+export async function getCart(cartKey: string, ctx: PolicyContext, cookieCartId?: string): Promise<Cart> {
 
-  if (!canAccessCart(ctx, cartKey)) {
+  if (!canAccessCart(ctx, cartKey, cookieCartId)) {
 
     return { items: [], ownerKey: cartKey, updatedAt: new Date().toISOString() }
 
@@ -86,9 +86,9 @@ export async function getCart(cartKey: string, ctx: PolicyContext): Promise<Cart
 
 
 
-export async function saveCart(cartKey: string, cart: Cart, ctx: PolicyContext): Promise<void> {
+export async function saveCart(cartKey: string, cart: Cart, ctx: PolicyContext, cookieCartId?: string): Promise<void> {
 
-  if (!canAccessCart(ctx, cartKey)) return
+  if (!canAccessCart(ctx, cartKey, cookieCartId)) return
 
 
 
@@ -110,9 +110,9 @@ export async function saveCart(cartKey: string, cart: Cart, ctx: PolicyContext):
 
 
 
-export async function clearCart(cartKey: string, ctx: PolicyContext): Promise<void> {
+export async function clearCart(cartKey: string, ctx: PolicyContext, cookieCartId?: string): Promise<void> {
 
-  if (!canAccessCart(ctx, cartKey)) return
+  if (!canAccessCart(ctx, cartKey, cookieCartId)) return
 
   await cacheDel(redisKey(cartKey))
 

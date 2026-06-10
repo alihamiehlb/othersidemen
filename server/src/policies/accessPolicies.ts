@@ -73,9 +73,10 @@ export function cartKeyFor(ctx: PolicyContext, cookieCartId?: string): string {
   return `guest:${generateGuestCartToken()}`
 }
 
-export function canAccessCart(ctx: PolicyContext, cartKey: string): boolean {
+export function canAccessCart(ctx: PolicyContext, cartKey: string, cookieCartId?: string): boolean {
   if (ctx.userId) return cartKey === `user:${ctx.userId}`
-  return cartKey.startsWith('guest:')
+  if (!cookieCartId || !isValidCartToken(cookieCartId)) return false
+  return cartKey === `guest:${cookieCartId}`
 }
 
 export function policyContextFromAuth(userId?: string, role?: string): PolicyContext {

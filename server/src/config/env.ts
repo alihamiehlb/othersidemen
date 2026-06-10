@@ -22,6 +22,12 @@ const envSchema = z.object({
   WHISH_API_URL: z.preprocess((v) => (v === '' ? undefined : v), z.string().url().optional()),
   WHISH_WEBHOOK_SECRET: z.string().optional(),
   WHATSAPP_NUMBER: z.string().optional(),
+  R2_ACCOUNT_ID: z.string().optional(),
+  R2_ACCESS_KEY_ID: z.string().optional(),
+  R2_SECRET_ACCESS_KEY: z.string().optional(),
+  R2_BUCKET_NAME: z.string().optional(),
+  R2_BUCKET: z.string().optional(),
+  R2_PUBLIC_URL: z.preprocess((v) => (v === '' ? undefined : v), z.string().url().optional()),
 })
 
 export type Env = z.infer<typeof envSchema>

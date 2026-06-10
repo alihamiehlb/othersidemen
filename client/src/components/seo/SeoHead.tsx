@@ -1,6 +1,17 @@
 import { useEffect } from 'react'
 import { SITE_URL } from '@/config/site'
+import { BUSINESS, DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE, SITE_NAME } from '@/config/seo'
 import { absoluteAssetUrl } from '@/utils/productImageUrl'
+
+export {
+  buildBreadcrumbJsonLd,
+  buildClothingStoreJsonLd,
+  buildFaqJsonLd,
+  buildItemListJsonLd,
+  buildOrganizationJsonLd,
+  buildProductJsonLd,
+  buildWebSiteJsonLd,
+} from '@/lib/seoStructuredData'
 
 export interface SeoHeadProps {
   title: string
@@ -12,10 +23,6 @@ export interface SeoHeadProps {
   noindex?: boolean
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
 }
-
-const DEFAULT_DESCRIPTION =
-  "OTHER SIDE Men — Premium men's streetwear. Two sides. One identity. Shop jackets, hoodies, sneakers and more."
-const DEFAULT_OG_IMAGE = `${SITE_URL}/images/hero.webp`
 
 function upsertMeta(attr: 'name' | 'property', key: string, content: string) {
   const selector = `meta[${attr}="${key}"]`
@@ -65,20 +72,31 @@ export function SeoHead({
 }: SeoHeadProps) {
   useEffect(() => {
     const canonical = `${SITE_URL}${canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`}`
-    const fullTitle = title.includes('OTHER SIDE') ? title : `${title} | OTHER SIDE`
+    const fullTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`
 
     document.title = fullTitle
+    document.documentElement.lang = 'en'
+
     upsertMeta('name', 'description', description)
-    upsertMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow')
+    upsertMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large')
+    upsertMeta('name', 'geo.region', BUSINESS.countryCode)
+    upsertMeta('name', 'geo.placename', `${BUSINESS.locality}, ${BUSINESS.country}`)
+    upsertMeta('name', 'geo.position', '33.8339;35.5444')
+    upsertMeta('name', 'ICBM', '33.8339, 35.5444')
+
     upsertMeta('property', 'og:title', fullTitle)
     upsertMeta('property', 'og:description', description)
     upsertMeta('property', 'og:type', ogType)
     upsertMeta('property', 'og:url', canonical)
     upsertMeta('property', 'og:image', absoluteAssetUrl(ogImage))
+    upsertMeta('property', 'og:site_name', SITE_NAME)
+    upsertMeta('property', 'og:locale', 'en_US')
+
     upsertMeta('name', 'twitter:card', 'summary_large_image')
     upsertMeta('name', 'twitter:title', fullTitle)
     upsertMeta('name', 'twitter:description', description)
     upsertMeta('name', 'twitter:image', absoluteAssetUrl(ogImage))
+
     upsertLink('canonical', canonical)
 
     if (jsonLd) {
@@ -93,45 +111,4 @@ export function SeoHead({
   }, [title, description, canonicalPath, ogImage, ogType, noindex, jsonLd ? JSON.stringify(jsonLd) : ''])
 
   return null
-}
-
-export function buildOrganizationJsonLd() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'OTHER SIDE',
-    url: SITE_URL,
-    logo: `${SITE_URL}/favicon-32.png`,
-    description: DEFAULT_DESCRIPTION,
-  }
-}
-
-export function buildProductJsonLd(product: {
-  name: string
-  slug: string
-  description?: string
-  price: number
-  images?: string[]
-  category?: string
-}) {
-  const image = product.images?.[0]
-  const imageUrl = absoluteAssetUrl(image)
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: product.description ?? product.name,
-    image: imageUrl,
-    url: `${SITE_URL}/product/${product.slug}`,
-    brand: { '@type': 'Brand', name: 'OTHER SIDE' },
-    ...(product.category ? { category: product.category } : {}),
-    offers: {
-      '@type': 'Offer',
-      price: product.price.toFixed(2),
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      url: `${SITE_URL}/product/${product.slug}`,
-    },
-  }
 }

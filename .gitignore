@@ -25,6 +25,9 @@ Thumbs.db
 .vscode/
 .idea/
 coverage/
+test-results/
+playwright-report/
+blob-report/
 *.tsbuildinfo
 .tools/
 graphify-out/

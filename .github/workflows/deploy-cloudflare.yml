@@ -35,6 +35,9 @@ jobs:
       - name: Build server
         run: npm run build:server
 
+      - name: Run security tests
+        run: npm run test -w server
+
       - name: Sync catalog images
         run: node scripts/sync-catalog-images.mjs
         env:

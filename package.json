@@ -28,11 +28,20 @@
     "process-images": "node scripts/process-images.mjs && node scripts/sync-images-config.mjs",
     "fix-images": "node scripts/apply-image-overrides.mjs && node scripts/sync-images-config.mjs",
     "import-catalog": "node scripts/import-catalog.mjs",
+    "reclassify-catalog": "node scripts/reclassify-catalog.mjs",
+    "migrate:r2": "node scripts/migrate-catalog-to-r2.mjs",
+    "setup:r2": "powershell -ExecutionPolicy Bypass -File scripts/setup-r2.ps1",
+    "test": "npm run test -w server",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
     "import-catalog:db": "npm run import-catalog -w server",
     "update-images": "npm run update-images -w server"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.840.0",
+    "@playwright/test": "^1.52.0",
     "concurrently": "^9.1.2",
+    "dotenv": "^16.4.7",
     "wrangler": "^4.24.0"
   }
 }

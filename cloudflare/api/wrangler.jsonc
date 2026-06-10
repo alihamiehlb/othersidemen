@@ -32,6 +32,12 @@
   "vars": {
     "NODE_ENV": "production"
   },
+  "r2_buckets": [
+    {
+      "binding": "ASSETS",
+      "bucket_name": "twoside-store-assets"
+    }
+  ],
   "unsafe": {
     "bindings": [
       {

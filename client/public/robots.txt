@@ -1,3 +1,6 @@
+# OTHER SIDE — https://twoside-store.pages.dev
+# LLM summary: /llms.txt
+
 User-agent: *
 Allow: /
 Disallow: /admin
@@ -8,5 +11,52 @@ Disallow: /login
 Disallow: /signup
 Disallow: /order/
 
-# Update Sitemap URL when your domain is live
+# AI / LLM crawlers — allow public catalog and legal pages
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /account
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+Disallow: /order/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+Disallow: /order/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /account
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+Disallow: /order/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+Disallow: /order/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+Disallow: /order/
+
 Sitemap: https://twoside-store.pages.dev/sitemap.xml

@@ -134,3 +134,34 @@ export async function api<T>(
 export function clearCsrfToken(): void {
   csrfToken = null
 }
+
+export async function apiUpload<T>(
+  path: string,
+  formData: FormData,
+): Promise<ApiResult<T>> {
+  const headers: Record<string, string> = {
+    'x-csrf-token': await getCsrfToken(),
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}${path}`, withTimeout({
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+      headers,
+    }))
+
+    const text = await res.text()
+    if (!text) {
+      return { success: false, data: null, error: userFacingError(res.status, null) }
+    }
+
+    const parsed = JSON.parse(text) as ApiResult<T>
+    return {
+      ...parsed,
+      error: parsed.success ? null : userFacingError(res.status, parsed.error),
+    }
+  } catch {
+    return { success: false, data: null, error: 'Upload failed. Check your connection.' }
+  }
+}

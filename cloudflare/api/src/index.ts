@@ -20,7 +20,14 @@ export interface Env {
   WHISH_MERCHANT_ID?: string
   WHISH_API_KEY?: string
   WHISH_API_URL?: string
+  WHISH_WEBHOOK_SECRET?: string
   WHATSAPP_NUMBER?: string
+  R2_ACCOUNT_ID?: string
+  R2_ACCESS_KEY_ID?: string
+  R2_SECRET_ACCESS_KEY?: string
+  R2_BUCKET_NAME?: string
+  R2_BUCKET?: string
+  R2_PUBLIC_URL?: string
 }
 
 /** Runs the Express API Docker image on Cloudflare Containers */
@@ -52,6 +59,13 @@ export class TwosideServer extends Container<Env> {
     if (e.WHISH_API_KEY) vars.WHISH_API_KEY = e.WHISH_API_KEY
     if (e.WHISH_API_URL) vars.WHISH_API_URL = e.WHISH_API_URL
     if (e.WHATSAPP_NUMBER) vars.WHATSAPP_NUMBER = e.WHATSAPP_NUMBER
+    if (e.WHISH_WEBHOOK_SECRET) vars.WHISH_WEBHOOK_SECRET = e.WHISH_WEBHOOK_SECRET
+    if (e.R2_ACCOUNT_ID) vars.R2_ACCOUNT_ID = e.R2_ACCOUNT_ID
+    if (e.R2_ACCESS_KEY_ID) vars.R2_ACCESS_KEY_ID = e.R2_ACCESS_KEY_ID
+    if (e.R2_SECRET_ACCESS_KEY) vars.R2_SECRET_ACCESS_KEY = e.R2_SECRET_ACCESS_KEY
+    if (e.R2_BUCKET_NAME) vars.R2_BUCKET_NAME = e.R2_BUCKET_NAME
+    else if (e.R2_BUCKET) vars.R2_BUCKET_NAME = e.R2_BUCKET
+    if (e.R2_PUBLIC_URL) vars.R2_PUBLIC_URL = e.R2_PUBLIC_URL
     return vars
   }
 

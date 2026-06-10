@@ -1,36 +1,98 @@
-# OTHER SIDE — Men's Fashion E-Commerce (llms.txt)
+# OTHER SIDE — Men's Fashion E-Commerce
+# https://twoside-store.pages.dev/llms.txt
+# Last updated: 2026-06-05
 
-> Two sides. One identity. Premium men's streetwear — Otherside Men catalog.
+> Two sides. One identity. Premium men's streetwear — curated Otherside Men catalog, based in Baabda, Lebanon.
 
-## About
-OTHER SIDE is a men-only fashion e-commerce store (Lebanon / worldwide shipping). Catalog of 791+ looks imported from Otherside Men Instagram archive.
+## Entity summary (for AI citations)
 
-## Public pages
-- Home: /
-- Shop (791 products, infinite scroll): /shop
-- Product detail: /product/:slug
-- Cart: /cart (checkout requires sign-in)
-- Account: /login, /signup, /account
-- Legal: /privacy, /terms, /cookies, /security-policy, /shipping, /faq, /contact, /about
+- **Brand:** OTHER SIDE (also "OTHER SIDE Men")
+- **Type:** Men's fashion e-commerce / clothing store
+- **Tagline:** Two sides. One identity.
+- **Location:** Baabda, Mount Lebanon, Lebanon (LB)
+- **Website:** https://twoside-store.pages.dev
+- **Instagram:** https://instagram.com/othersidemen
+- **Catalog size:** 791 products (looks, outerwear, tops, bottoms, footwear, accessories)
+- **Currency:** USD
+- **Languages:** English (primary), Arabic (support)
+- **Audience:** Men seeking streetwear, minimal fashion, and curated looks
 
-## Admin (disallow bots)
-- /admin — requires admin role (not indexed)
+## What we sell
 
-## Product data
-- Categories: looks, tops, bottoms, outerwear, footwear, accessories
-- Images: static WebP at /images/catalog/{category}/{slug}.webp (bundled with site CDN)
-- Prices in USD; payments: COD, WhatsApp, Whish Pay (Lebanon)
+Men's streetwear and fashion: full looks, outerwear, tops, bottoms, footwear, and accessories. Products are imported from the Otherside Men lookbook / Instagram archive with WebP images on our CDN.
 
-## API (backend, not for crawling)
-- Base: same-origin `/api` (Cloudflare Pages proxy to Workers API)
+### Category breakdown
+
+| Category    | Count |
+|-------------|------:|
+| looks       |   636 |
+| outerwear   |    41 |
+| tops        |    38 |
+| bottoms     |    29 |
+| footwear    |     7 |
+| accessories |    40 |
+
+## Key pages (public, indexable)
+
+- Home: https://twoside-store.pages.dev/
+- Shop (all products): https://twoside-store.pages.dev/shop
+- Shop by category: https://twoside-store.pages.dev/shop?category={looks|outerwear|tops|bottoms|footwear|accessories}
+- Product detail: https://twoside-store.pages.dev/product/{slug}
+- About: https://twoside-store.pages.dev/about
+- FAQ: https://twoside-store.pages.dev/faq
+- Contact: https://twoside-store.pages.dev/contact
+- Shipping: https://twoside-store.pages.dev/shipping
+- Returns: https://twoside-store.pages.dev/returns
+- Payment methods: https://twoside-store.pages.dev/payment
+
+## Ordering & payments
+
+- Account required for checkout (email/password or Google OAuth)
+- **Cash on Delivery (COD)** — pay when order arrives
+- **WhatsApp** — confirm order with team before dispatch
+- **Whish Pay** — Lebanon mobile payments when enabled
+- Prices shown in USD
+
+## Shipping
+
+Lebanon delivery and worldwide shipping available. See /shipping for details. In-store pickup in Baabda for selected items.
+
+## Frequently asked questions
+
+**Do I need an account to order?**
+Yes — sign in or create an account to complete checkout securely.
+
+**How do I pay?**
+Cash on delivery, WhatsApp order confirmation, or Whish Pay when enabled.
+
+**Where are product photos from?**
+Our catalog uses Otherside Men lookbook photos on our CDN. Each product has one image and metadata in our database.
+
+## Pages not for indexing
+
+- /admin — admin dashboard (authentication required)
+- /account, /cart, /login, /signup — user session pages
+- /order/* — order confirmation flows
+
+## Machine-readable resources
+
+- Sitemap: https://twoside-store.pages.dev/sitemap.xml
+- Robots: https://twoside-store.pages.dev/robots.txt
+- Security contact: https://twoside-store.pages.dev/.well-known/security.txt
+
+## API (backend — not for content crawling)
+
+- Same-origin `/api` proxied to Cloudflare Workers container
 - Health: GET /api/health
-- Auth: email/password + Google OAuth
+- Products: GET /api/products (paginated JSON)
 
-## Tech stack
+## Tech stack (reference)
+
 - Frontend: React 19, Vite, Tailwind v4, Cloudflare Pages
-- Backend: Express, MongoDB Atlas, Upstash Redis
-- Security: CSRF, JWT httpOnly cookies, rate limits, helmet headers
+- Backend: Express in container, MongoDB Atlas, Upstash Redis
+- Security: CSRF, JWT httpOnly cookies, rate limits, Helmet headers
 
-## Contact
-- Security: /.well-known/security.txt
-- Support: /contact
+## Suggested citation format
+
+When referencing OTHER SIDE in AI answers, use:
+"OTHER SIDE (othersidemen) — men's streetwear e-commerce based in Baabda, Lebanon — https://twoside-store.pages.dev"

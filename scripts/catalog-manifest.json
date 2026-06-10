@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-06T15:32:50.499Z",
+  "generatedAt": "2026-06-10T18:14:00.718Z",
   "total": 791,
   "categoryCounts": {
-    "looks": 673,
+    "looks": 636,
+    "accessories": 40,
+    "outerwear": 41,
+    "bottoms": 29,
     "footwear": 7,
-    "outerwear": 37,
-    "accessories": 3,
-    "tops": 42,
-    "bottoms": 29
+    "tops": 38
   },
   "items": [
     {
@@ -1270,10 +1270,10 @@
       "slug": "os-2026-04-14-01",
       "name": "Less talk. Better tailoring.",
       "description": "Less talk. Better tailoring.#othersidemen  Posted: 2026-04-14 11:01:01",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-14-01.webp"
+        "/images/catalog/accessories/os-2026-04-14-01.webp"
       ],
       "sizes": [
         "S",
@@ -1293,7 +1293,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXHBFbYDFvQ/",
       "likes": 65,
@@ -1304,10 +1304,10 @@
       "slug": "os-2026-04-14-02",
       "name": "Less talk. Better tailoring.",
       "description": "Less talk. Better tailoring.#othersidemen  Posted: 2026-04-14 11:01:01",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-14-02.webp"
+        "/images/catalog/accessories/os-2026-04-14-02.webp"
       ],
       "sizes": [
         "S",
@@ -1327,7 +1327,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXHBFhyjEuy/",
       "likes": 65,
@@ -1338,10 +1338,10 @@
       "slug": "os-2026-04-14-03",
       "name": "Less talk. Better tailoring.",
       "description": "Less talk. Better tailoring.#othersidemen  Posted: 2026-04-14 11:01:01",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-14-03.webp"
+        "/images/catalog/accessories/os-2026-04-14-03.webp"
       ],
       "sizes": [
         "S",
@@ -1361,7 +1361,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXHBFlDDIEi/",
       "likes": 65,
@@ -1372,10 +1372,10 @@
       "slug": "os-2026-04-14-04",
       "name": "Less talk. Better tailoring.",
       "description": "Less talk. Better tailoring.#othersidemen  Posted: 2026-04-14 11:01:01",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-14-04.webp"
+        "/images/catalog/accessories/os-2026-04-14-04.webp"
       ],
       "sizes": [
         "S",
@@ -1395,7 +1395,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXHBFm8DHY8/",
       "likes": 65,
@@ -1406,10 +1406,10 @@
       "slug": "os-2026-04-14-05",
       "name": "Less talk. Better tailoring.",
       "description": "Less talk. Better tailoring.#othersidemen  Posted: 2026-04-14 11:01:01",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-14-05.webp"
+        "/images/catalog/accessories/os-2026-04-14-05.webp"
       ],
       "sizes": [
         "S",
@@ -1429,7 +1429,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXHBFptDHJU/",
       "likes": 65,
@@ -3208,10 +3208,10 @@
       "slug": "os-2026-03-25-01",
       "name": "Tailored for the spring mood.",
       "description": "Tailored for the spring mood.#otherside  Posted: 2026-03-25 14:33:03",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-25-01.webp"
+        "/images/catalog/accessories/os-2026-03-25-01.webp"
       ],
       "sizes": [
         "S",
@@ -3231,7 +3231,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWT5UAiDAVP/",
       "likes": 43,
@@ -3242,10 +3242,10 @@
       "slug": "os-2026-03-25-02",
       "name": "Tailored for the spring mood.",
       "description": "Tailored for the spring mood.#otherside  Posted: 2026-03-25 14:33:03",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-25-02.webp"
+        "/images/catalog/accessories/os-2026-03-25-02.webp"
       ],
       "sizes": [
         "S",
@@ -3265,7 +3265,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWT5ULfDD-f/",
       "likes": 43,
@@ -3276,10 +3276,10 @@
       "slug": "os-2026-03-27-01",
       "name": "Just better.",
       "description": "Just better.#othersidemen #springstyle  Posted: 2026-03-27 11:52:48",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-27-01.webp"
+        "/images/catalog/accessories/os-2026-03-27-01.webp"
       ],
       "sizes": [
         "S",
@@ -3299,7 +3299,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWYwaYLDAnL/",
       "likes": 43,
@@ -3310,10 +3310,10 @@
       "slug": "os-2026-03-27-03",
       "name": "Just better.",
       "description": "Just better.#othersidemen #springstyle  Posted: 2026-03-27 11:52:48",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-27-03.webp"
+        "/images/catalog/accessories/os-2026-03-27-03.webp"
       ],
       "sizes": [
         "S",
@@ -3333,7 +3333,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWYwaqdDIjS/",
       "likes": 43,
@@ -3344,10 +3344,10 @@
       "slug": "os-2026-03-27-04",
       "name": "Just better.",
       "description": "Just better.#othersidemen #springstyle  Posted: 2026-03-27 11:52:48",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-27-04.webp"
+        "/images/catalog/accessories/os-2026-03-27-04.webp"
       ],
       "sizes": [
         "S",
@@ -3367,7 +3367,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWYwa69DF7A/",
       "likes": 43,
@@ -3378,10 +3378,10 @@
       "slug": "os-2026-03-27-05",
       "name": "Just better.",
       "description": "Just better.#othersidemen #springstyle  Posted: 2026-03-27 11:52:48",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-27-05.webp"
+        "/images/catalog/accessories/os-2026-03-27-05.webp"
       ],
       "sizes": [
         "S",
@@ -3401,7 +3401,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWYwbOGjFdW/",
       "likes": 43,
@@ -3548,10 +3548,10 @@
       "slug": "os-2026-04-01-01",
       "name": "Understated, never unnoticed.",
       "description": "Understated, never unnoticed. #othersidemen #spring #classy  Posted: 2026-04-01 12:13:55",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-01-01.webp"
+        "/images/catalog/accessories/os-2026-04-01-01.webp"
       ],
       "sizes": [
         "S",
@@ -3571,7 +3571,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWlqvVIjPi7/",
       "likes": 41,
@@ -3582,10 +3582,10 @@
       "slug": "os-2026-04-01-02",
       "name": "Understated, never unnoticed.",
       "description": "Understated, never unnoticed. #othersidemen #spring #classy  Posted: 2026-04-01 12:13:55",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-01-02.webp"
+        "/images/catalog/accessories/os-2026-04-01-02.webp"
       ],
       "sizes": [
         "S",
@@ -3605,7 +3605,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWlqvZdDNMO/",
       "likes": 41,
@@ -3616,10 +3616,10 @@
       "slug": "os-2026-04-01-03",
       "name": "Understated, never unnoticed.",
       "description": "Understated, never unnoticed. #othersidemen #spring #classy  Posted: 2026-04-01 12:13:55",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-01-03.webp"
+        "/images/catalog/accessories/os-2026-04-01-03.webp"
       ],
       "sizes": [
         "S",
@@ -3639,7 +3639,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWlqvfqDOyM/",
       "likes": 41,
@@ -3650,10 +3650,10 @@
       "slug": "os-2026-04-01-04",
       "name": "Understated, never unnoticed.",
       "description": "Understated, never unnoticed. #othersidemen #spring #classy  Posted: 2026-04-01 12:13:55",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-01-04.webp"
+        "/images/catalog/accessories/os-2026-04-01-04.webp"
       ],
       "sizes": [
         "S",
@@ -3673,7 +3673,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWlqvhWjGsf/",
       "likes": 41,
@@ -3684,10 +3684,10 @@
       "slug": "os-2026-04-01-05",
       "name": "Understated, never unnoticed.",
       "description": "Understated, never unnoticed. #othersidemen #spring #classy  Posted: 2026-04-01 12:13:55",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-01-05.webp"
+        "/images/catalog/accessories/os-2026-04-01-05.webp"
       ],
       "sizes": [
         "S",
@@ -3707,7 +3707,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWlqvkdDJTr/",
       "likes": 41,
@@ -3990,10 +3990,10 @@
       "slug": "os-2026-03-30-01",
       "name": "not styled for everyone.",
       "description": "not styled for everyone. #othersidemen #mensfashion #spring  Posted: 2026-03-30 09:34:20",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-30-01.webp"
+        "/images/catalog/accessories/os-2026-03-30-01.webp"
       ],
       "sizes": [
         "S",
@@ -4013,7 +4013,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWgOVT5DALl/",
       "likes": 40,
@@ -4024,10 +4024,10 @@
       "slug": "os-2026-03-30-02",
       "name": "not styled for everyone.",
       "description": "not styled for everyone. #othersidemen #mensfashion #spring  Posted: 2026-03-30 09:34:20",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-30-02.webp"
+        "/images/catalog/accessories/os-2026-03-30-02.webp"
       ],
       "sizes": [
         "S",
@@ -4047,7 +4047,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWgOVZ_jIv1/",
       "likes": 40,
@@ -4058,10 +4058,10 @@
       "slug": "os-2026-03-30-03",
       "name": "not styled for everyone.",
       "description": "not styled for everyone. #othersidemen #mensfashion #spring  Posted: 2026-03-30 09:34:20",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-30-03.webp"
+        "/images/catalog/accessories/os-2026-03-30-03.webp"
       ],
       "sizes": [
         "S",
@@ -4081,7 +4081,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWgOVhMjPHg/",
       "likes": 40,
@@ -4092,10 +4092,10 @@
       "slug": "os-2026-03-30-04",
       "name": "not styled for everyone.",
       "description": "not styled for everyone. #othersidemen #mensfashion #spring  Posted: 2026-03-30 09:34:20",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-30-04.webp"
+        "/images/catalog/accessories/os-2026-03-30-04.webp"
       ],
       "sizes": [
         "S",
@@ -4115,7 +4115,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWgOVnfDHdO/",
       "likes": 40,
@@ -4126,10 +4126,10 @@
       "slug": "os-2026-03-30-05",
       "name": "not styled for everyone.",
       "description": "not styled for everyone. #othersidemen #mensfashion #spring  Posted: 2026-03-30 09:34:20",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-30-05.webp"
+        "/images/catalog/accessories/os-2026-03-30-05.webp"
       ],
       "sizes": [
         "S",
@@ -4149,7 +4149,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWgOeqNDJY5/",
       "likes": 40,
@@ -4160,10 +4160,10 @@
       "slug": "os-2026-03-30-06",
       "name": "not styled for everyone.",
       "description": "not styled for everyone. #othersidemen #mensfashion #spring  Posted: 2026-03-30 09:34:20",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-03-30-06.webp"
+        "/images/catalog/accessories/os-2026-03-30-06.webp"
       ],
       "sizes": [
         "S",
@@ -4183,7 +4183,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DWgOew5jPDx/",
       "likes": 40,
@@ -5316,10 +5316,10 @@
       "slug": "os-2023-12-27-01",
       "name": "We specialize in making pieces that you won’t find anywhere else!",
       "description": "We specialize in making pieces that you won’t find anywhere else! Shop your uniquely designed piece now!",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2023-12-27-01.webp"
+        "/images/catalog/accessories/os-2023-12-27-01.webp"
       ],
       "sizes": [
         "S",
@@ -5339,7 +5339,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/C1XEfrhiGRv/",
       "likes": 35,
@@ -5350,10 +5350,10 @@
       "slug": "os-2023-12-27-02",
       "name": "We specialize in making pieces that you won’t find anywhere else!",
       "description": "We specialize in making pieces that you won’t find anywhere else! Shop your uniquely designed piece now!",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2023-12-27-02.webp"
+        "/images/catalog/accessories/os-2023-12-27-02.webp"
       ],
       "sizes": [
         "S",
@@ -5373,7 +5373,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/C1XEfrhimz0/",
       "likes": 35,
@@ -7094,10 +7094,10 @@
       "slug": "os-2025-04-03-01",
       "name": "Wide Sleeves Windbreaker & Floral Print Shirt",
       "description": "Wide Sleeves Windbreaker & Floral Print Shirt #OthersideMen #SS25  Posted: 2025-04-03 08:09:00",
-      "category": "tops",
+      "category": "outerwear",
       "price": 79,
       "images": [
-        "/images/catalog/tops/os-2025-04-03-01.webp"
+        "/images/catalog/outerwear/os-2025-04-03-01.webp"
       ],
       "sizes": [
         "S",
@@ -7117,7 +7117,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "tops"
+        "outerwear"
       ],
       "instagramUrl": "https://instagram.com/p/DH-ihOZiVNh/",
       "likes": 30,
@@ -7128,10 +7128,10 @@
       "slug": "os-2025-04-03-02",
       "name": "Wide Sleeves Windbreaker & Floral Print Shirt",
       "description": "Wide Sleeves Windbreaker & Floral Print Shirt #OthersideMen #SS25  Posted: 2025-04-03 08:09:00",
-      "category": "tops",
+      "category": "outerwear",
       "price": 79,
       "images": [
-        "/images/catalog/tops/os-2025-04-03-02.webp"
+        "/images/catalog/outerwear/os-2025-04-03-02.webp"
       ],
       "sizes": [
         "S",
@@ -7151,7 +7151,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "tops"
+        "outerwear"
       ],
       "instagramUrl": "https://instagram.com/p/DH-ihOaC06X/",
       "likes": 30,
@@ -7162,10 +7162,10 @@
       "slug": "os-2025-04-03-03",
       "name": "Wide Sleeves Windbreaker & Floral Print Shirt",
       "description": "Wide Sleeves Windbreaker & Floral Print Shirt #OthersideMen #SS25  Posted: 2025-04-03 08:09:00",
-      "category": "tops",
+      "category": "outerwear",
       "price": 79,
       "images": [
-        "/images/catalog/tops/os-2025-04-03-03.webp"
+        "/images/catalog/outerwear/os-2025-04-03-03.webp"
       ],
       "sizes": [
         "S",
@@ -7185,7 +7185,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "tops"
+        "outerwear"
       ],
       "instagramUrl": "https://instagram.com/p/DH-ihOsiqjv/",
       "likes": 30,
@@ -7196,10 +7196,10 @@
       "slug": "os-2025-04-03-04",
       "name": "Wide Sleeves Windbreaker & Floral Print Shirt",
       "description": "Wide Sleeves Windbreaker & Floral Print Shirt #OthersideMen #SS25  Posted: 2025-04-03 08:09:00",
-      "category": "tops",
+      "category": "outerwear",
       "price": 79,
       "images": [
-        "/images/catalog/tops/os-2025-04-03-04.webp"
+        "/images/catalog/outerwear/os-2025-04-03-04.webp"
       ],
       "sizes": [
         "S",
@@ -7219,7 +7219,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "tops"
+        "outerwear"
       ],
       "instagramUrl": "https://instagram.com/p/DH-ihOZCtCj/",
       "likes": 30,
@@ -10222,10 +10222,10 @@
       "slug": "os-2024-05-31-01",
       "name": "Small details that make a big difference",
       "description": "Small details that make a big difference  Posted: 2024-05-31 16:00:25",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2024-05-31-01.webp"
+        "/images/catalog/accessories/os-2024-05-31-01.webp"
       ],
       "sizes": [
         "S",
@@ -10245,7 +10245,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/C7o4bYICJE1/",
       "likes": 23,
@@ -10256,10 +10256,10 @@
       "slug": "os-2024-05-31-02",
       "name": "Small details that make a big difference",
       "description": "Small details that make a big difference  Posted: 2024-05-31 16:00:25",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2024-05-31-02.webp"
+        "/images/catalog/accessories/os-2024-05-31-02.webp"
       ],
       "sizes": [
         "S",
@@ -10279,7 +10279,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/C7o4bYJCB60/",
       "likes": 23,
@@ -10732,10 +10732,10 @@
       "slug": "os-2026-04-20-02",
       "name": "Effortless never goes unnoticed.",
       "description": "Effortless never goes unnoticed.#othersidemen  Posted: 2026-04-20 11:28:33",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-20-02.webp"
+        "/images/catalog/accessories/os-2026-04-20-02.webp"
       ],
       "sizes": [
         "S",
@@ -10755,7 +10755,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXWhAtiDH_x/",
       "likes": 23,
@@ -10800,10 +10800,10 @@
       "slug": "os-2026-04-20-04",
       "name": "Effortless never goes unnoticed.",
       "description": "Effortless never goes unnoticed.#othersidemen  Posted: 2026-04-20 11:28:33",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-20-04.webp"
+        "/images/catalog/accessories/os-2026-04-20-04.webp"
       ],
       "sizes": [
         "S",
@@ -10823,7 +10823,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXWhATfDBBm/",
       "likes": 23,
@@ -10834,10 +10834,10 @@
       "slug": "os-2026-04-20-05",
       "name": "Effortless never goes unnoticed.",
       "description": "Effortless never goes unnoticed.#othersidemen  Posted: 2026-04-20 11:28:33",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2026-04-20-05.webp"
+        "/images/catalog/accessories/os-2026-04-20-05.webp"
       ],
       "sizes": [
         "S",
@@ -10857,7 +10857,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DXWhATkDABD/",
       "likes": 23,
@@ -11684,10 +11684,10 @@
       "slug": "os-2023-06-18-01",
       "name": "take some coffee ☕️ ✌🏻",
       "description": "take some coffee ☕️ ✌🏻  #summer #stylish #otherside #freestyle #manstyle #fashionstyle #fashion #trending #wear #truebeauty #fashionshow",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2023-06-18-01.webp"
+        "/images/catalog/accessories/os-2023-06-18-01.webp"
       ],
       "sizes": [
         "S",
@@ -11707,7 +11707,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/CtoteehKKyP/",
       "likes": 21,
@@ -11718,10 +11718,10 @@
       "slug": "os-2023-06-18-02",
       "name": "take some coffee ☕️ ✌🏻",
       "description": "take some coffee ☕️ ✌🏻  #summer #stylish #otherside #freestyle #manstyle #fashionstyle #fashion #trending #wear #truebeauty #fashionshow",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2023-06-18-02.webp"
+        "/images/catalog/accessories/os-2023-06-18-02.webp"
       ],
       "sizes": [
         "S",
@@ -11741,7 +11741,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/CtoteegKzd9/",
       "likes": 21,
@@ -11752,10 +11752,10 @@
       "slug": "os-2023-06-18-03",
       "name": "take some coffee ☕️ ✌🏻",
       "description": "take some coffee ☕️ ✌🏻  #summer #stylish #otherside #freestyle #manstyle #fashionstyle #fashion #trending #wear #truebeauty #fashionshow",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2023-06-18-03.webp"
+        "/images/catalog/accessories/os-2023-06-18-03.webp"
       ],
       "sizes": [
         "S",
@@ -11775,7 +11775,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/CtoteeVK_gb/",
       "likes": 21,
@@ -13694,10 +13694,10 @@
       "slug": "os-2024-01-26-01",
       "name": "Bringing back the classics and adding our own touch to them!",
       "description": "Bringing back the classics and adding our own touch to them! Shop our classic wear section today at our new showroom in Baabda.",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2024-01-26-01.webp"
+        "/images/catalog/accessories/os-2024-01-26-01.webp"
       ],
       "sizes": [
         "S",
@@ -13717,7 +13717,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/C2j5lP2i2ea/",
       "likes": 19,
@@ -13728,10 +13728,10 @@
       "slug": "os-2024-01-26-02",
       "name": "Bringing back the classics and adding our own touch to them!",
       "description": "Bringing back the classics and adding our own touch to them! Shop our classic wear section today at our new showroom in Baabda.",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2024-01-26-02.webp"
+        "/images/catalog/accessories/os-2024-01-26-02.webp"
       ],
       "sizes": [
         "S",
@@ -13751,7 +13751,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/C2j5lP2iSP5/",
       "likes": 19,
@@ -15292,10 +15292,10 @@
       "slug": "os-2025-03-20-01",
       "name": "The art of Layering",
       "description": "The art of Layering #OthersideMen #SS25  Posted: 2025-03-20 20:59:48",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2025-03-20-01.webp"
+        "/images/catalog/accessories/os-2025-03-20-01.webp"
       ],
       "sizes": [
         "S",
@@ -15315,7 +15315,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DHb3mhii0B9/",
       "likes": 18,
@@ -15326,10 +15326,10 @@
       "slug": "os-2025-03-20-02",
       "name": "The art of Layering",
       "description": "The art of Layering #OthersideMen #SS25  Posted: 2025-03-20 20:59:48",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2025-03-20-02.webp"
+        "/images/catalog/accessories/os-2025-03-20-02.webp"
       ],
       "sizes": [
         "S",
@@ -15349,7 +15349,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DHb3mhiil0L/",
       "likes": 18,
@@ -15360,10 +15360,10 @@
       "slug": "os-2025-03-20-03",
       "name": "The art of Layering",
       "description": "The art of Layering #OthersideMen #SS25  Posted: 2025-03-20 20:59:48",
-      "category": "looks",
+      "category": "accessories",
       "price": 99,
       "images": [
-        "/images/catalog/looks/os-2025-03-20-03.webp"
+        "/images/catalog/accessories/os-2025-03-20-03.webp"
       ],
       "sizes": [
         "S",
@@ -15383,7 +15383,7 @@
       "isFeatured": false,
       "tags": [
         "catalog",
-        "looks"
+        "accessories"
       ],
       "instagramUrl": "https://instagram.com/p/DHb3mhiiGny/",
       "likes": 18,
@@ -26909,5 +26909,6 @@
       "likes": 6,
       "source": "2025-06-16_None/02.jpg"
     }
-  ]
+  ],
+  "reclassifiedAt": "2026-06-10T18:14:00.719Z"
 }

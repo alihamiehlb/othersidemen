@@ -9,6 +9,7 @@ RUN npm run build
 FROM node:22-alpine AS production
 WORKDIR /app
 ENV NODE_ENV=production
+RUN apk add --no-cache vips
 COPY package.json ./
 RUN npm install --omit=dev
 COPY --from=builder /app/dist ./dist

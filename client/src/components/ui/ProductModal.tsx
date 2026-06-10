@@ -64,13 +64,7 @@ export function ProductModal({ product, loading = false, onClose }: ProductModal
   const title = displayProductName(product.name)
   const description = product.description ? displayProductDescription(product.description) : ''
 
-  const whatsappUrl = buildWhatsAppOrderUrl({
-    name: title,
-    price: product.price,
-    size,
-    color,
-    slug: product.slug,
-  })
+  const whatsappUrl = buildWhatsAppOrderUrl({ size, color, slug: product.slug })
 
   async function handleAddToCart() {
     if (!size || !color) {

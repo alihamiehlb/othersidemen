@@ -24,6 +24,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js'
 import { invalidateProductCache } from '../../utils/invalidateProductCache.js'
 import { escapeRegex } from '../../utils/escapeRegex.js'
 import { lookGroupKey, lookGroupSlugPrefix } from '../../utils/lookGroup.js'
+import { adminUploadRouter } from './upload.js'
 
 
 
@@ -34,6 +35,8 @@ export const adminRouter = Router()
 adminRouter.use(adminLimiter)
 
 adminRouter.use(asyncHandler(requireAdmin as (req: import('express').Request, res: import('express').Response, next: import('express').NextFunction) => Promise<void>))
+
+adminRouter.use('/upload', adminUploadRouter)
 
 
 
@@ -51,7 +54,12 @@ const productSchema = z.object({
 
   name: z.string().min(1).max(200),
 
-  slug: z.string().min(1).max(200).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),
+  slug: z
+    .string()
+    .min(1)
+    .max(200)
+    .transform((s) => s.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))
+    .refine((s) => /^[a-z0-9-]+$/.test(s), 'Slug must be lowercase alphanumeric with hyphens'),
 
   description: z.string().max(2000).default(''),
 
@@ -61,7 +69,7 @@ const productSchema = z.object({
 
   category: z.enum(['looks', 'tops', 'bottoms', 'outerwear', 'footwear', 'accessories']),
 
-  images: z.array(imagePathSchema).max(10).default([]),
+  images: z.array(imagePathSchema).min(1, 'At least one image is required').max(10),
 
   sizes: z.array(z.string().max(20)).max(20).default([]),
 

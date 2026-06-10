@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { LoadingScreen } from '@/components/branding/LoadingScreen'
 import { ErrorScreen } from '@/components/branding/ErrorScreen'
 import { ProductImage } from '@/components/ui/ProductImage'
-import { SeoHead, buildProductJsonLd } from '@/components/seo/SeoHead'
+import { SeoHead, buildBreadcrumbJsonLd, buildProductJsonLd } from '@/components/seo/SeoHead'
 import { useCart } from '@/contexts/CartContext'
 import { api } from '@/lib/api'
 import { loadLookGroup } from '@/lib/lookGroups'
@@ -103,13 +103,7 @@ export function ProductPage() {
   const colors = defaultColors(product.category, product.colors)
   const images = gallery.length ? gallery : product.images
 
-  const whatsappUrl = buildWhatsAppOrderUrl({
-    name: title,
-    price: product.price,
-    size,
-    color,
-    slug: product.slug,
-  })
+  const whatsappUrl = buildWhatsAppOrderUrl({ size, color, slug: product.slug })
 
   async function handleAdd() {
     if (!size || !color) {
@@ -134,14 +128,24 @@ export function ProductPage() {
         canonicalPath={`/product/${product.slug}`}
         ogType="product"
         ogImage={images[0] ?? '/images/hero.webp'}
-        jsonLd={buildProductJsonLd({
-          name: title,
-          slug: product.slug,
-          description,
-          price: product.price,
-          images,
-          category: product.category,
-        })}
+        jsonLd={[
+          buildProductJsonLd({
+            name: title,
+            slug: product.slug,
+            description,
+            price: product.price,
+            images,
+            category: product.category,
+          }),
+          buildBreadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            {
+              name: 'Shop',
+              path: product.category ? `/shop?category=${product.category}` : '/shop',
+            },
+            { name: title, path: `/product/${product.slug}` },
+          ]),
+        ]}
       />
       <div className="page-enter mx-auto max-w-[1200px] px-6 py-8 lg:px-10 lg:py-12">
         <Link

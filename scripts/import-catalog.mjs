@@ -6,21 +6,13 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
+import { classifyText } from './lib/category-classifier.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const EXTRACT = path.join(ROOT, '.tmp-extract', 'otherside.men')
 const OUT_BASE = path.join(ROOT, 'client', 'public', 'images', 'catalog')
 const MANIFEST_PATH = path.join(__dirname, 'catalog-manifest.json')
-
-const CATEGORY_RULES = [
-  { category: 'footwear', keywords: ['sneaker', 'trainer', 'shoe', 'loafer', 'boot', 'footwear', 'slide', 'sandal'] },
-  { category: 'accessories', keywords: ['bag', 'crossbody', 'tote', 'backpack', 'belt', 'cap', 'wallet', 'leather bag'] },
-  { category: 'outerwear', keywords: ['puffer', 'jacket', 'coat', 'blazer', 'bomber', 'outerwear', 'quilted', 'overcoat', 'overshirt'] },
-  { category: 'bottoms', keywords: ['cargo', 'pant', 'trouser', 'chino', 'jean', 'denim', 'short', 'jogger', 'sweatpant', 'bottom'] },
-  { category: 'tops', keywords: ['shirt', 'tee', 't-shirt', 'hoodie', 'sweatshirt', 'polo', 'knit', 'top', 'linen', 'blouse', 'sweater'] },
-  { category: 'looks', keywords: ['look', 'outfit', 'style', 'collection', 'layer', 'set', 'complete the look'] },
-]
 
 const CATEGORY_PRICE = {
   outerwear: 149,
@@ -35,19 +27,6 @@ const CATEGORY_SIZES = {
   footwear: ['7', '8', '9', '10', '11', '12'],
   accessories: ['One Size'],
   default: ['S', 'M', 'L', 'XL'],
-}
-
-function classify(caption) {
-  const lower = caption.toLowerCase()
-  let best = { category: 'looks', score: 0 }
-  for (const rule of CATEGORY_RULES) {
-    let score = 0
-    for (const kw of rule.keywords) {
-      if (lower.includes(kw)) score += kw.length > 4 ? 3 : 2
-    }
-    if (score > best.score) best = { category: rule.category, score }
-  }
-  return best.category
 }
 
 function parseCaptionMeta(caption) {
@@ -140,7 +119,7 @@ async function main() {
     const img = images[i]
     if (i % 50 === 0) console.log(`[catalog] ${i}/${images.length}`)
 
-    const category = classify(img.caption)
+    const category = classifyText(img.caption)
     categoryCounts[category] = (categoryCounts[category] ?? 0) + 1
     const slug = slugFromRel(img.rel)
     const sourceId = sourceIdFromRel(img.rel)

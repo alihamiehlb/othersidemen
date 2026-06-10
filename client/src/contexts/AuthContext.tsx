@@ -26,7 +26,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     const res = await api<AuthUser>('/api/auth/me', {}, 3)
-    setUser(res.success ? res.data : null)
+    const next = res.success ? res.data : null
+    setUser((prev) => {
+      if (next && !prev) clearCsrfToken()
+      return next
+    })
   }, [])
 
   useEffect(() => {

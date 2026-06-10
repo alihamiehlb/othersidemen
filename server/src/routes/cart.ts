@@ -22,9 +22,13 @@ function getPolicyCtx(req: AuthRequest) {
   return policyContextFromAuth(req.userId, req.currentUser?.role)
 }
 
+function guestCartId(req: AuthRequest): string | undefined {
+  return req.cookies?.cartId as string | undefined
+}
+
 function resolveAndBindCart(req: AuthRequest, res: import('express').Response): string {
   const ctx = getPolicyCtx(req)
-  const cookieCartId = req.cookies?.cartId as string | undefined
+  const cookieCartId = guestCartId(req)
   const cartKey = resolveCartKey(ctx, cookieCartId)
 
   // Logged-in users always use user-scoped cart (prevents cart IDOR via cookie swap)
@@ -44,7 +48,7 @@ cartRouter.get('/', asyncHandler(async (req, res) => {
   const authReq = req as AuthRequest
   const ctx = getPolicyCtx(authReq)
   const cartKey = resolveAndBindCart(authReq, res)
-  const cart = await getCart(cartKey, ctx)
+  const cart = await getCart(cartKey, ctx, guestCartId(authReq))
   sendSuccess(res, { ...cart, total: cartTotal(cart.items), itemCount: cart.items.reduce((s, i) => s + i.quantity, 0) })
 }))
 
@@ -64,7 +68,8 @@ cartRouter.post('/items', asyncHandler(async (req, res) => {
   }
 
   const cartKey = resolveAndBindCart(authReq, res)
-  const cart = await getCart(cartKey, ctx)
+  const cookieCartId = guestCartId(authReq)
+  const cart = await getCart(cartKey, ctx, cookieCartId)
   const existing = cart.items.find(
     (i) => i.productId === parsed.data.productId && i.size === parsed.data.size && i.color === parsed.data.color,
   )
@@ -83,7 +88,7 @@ cartRouter.post('/items', asyncHandler(async (req, res) => {
     })
   }
 
-  await saveCart(cartKey, cart, ctx)
+  await saveCart(cartKey, cart, ctx, cookieCartId)
   sendSuccess(res, { ...cart, total: cartTotal(cart.items) })
 }))
 
@@ -98,9 +103,10 @@ cartRouter.delete('/items/:productId', asyncHandler(async (req, res) => {
   }
 
   const cartKey = resolveAndBindCart(authReq, res)
-  const cart = await getCart(cartKey, ctx)
+  const cookieCartId = guestCartId(authReq)
+  const cart = await getCart(cartKey, ctx, cookieCartId)
   cart.items = cart.items.filter((i) => i.productId !== productId)
-  await saveCart(cartKey, cart, ctx)
+  await saveCart(cartKey, cart, ctx, cookieCartId)
   sendSuccess(res, { ...cart, total: cartTotal(cart.items) })
 }))
 
@@ -108,6 +114,6 @@ cartRouter.delete('/', asyncHandler(async (req, res) => {
   const authReq = req as AuthRequest
   const ctx = getPolicyCtx(authReq)
   const cartKey = resolveAndBindCart(authReq, res)
-  await clearCart(cartKey, ctx)
+  await clearCart(cartKey, ctx, guestCartId(authReq))
   sendSuccess(res, { items: [], total: 0 })
 }))

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ProductImage } from '@/components/ui/ProductImage'
 import { Button } from '@/components/ui/Button'
-import { api } from '@/lib/api'
+import { api, apiUpload } from '@/lib/api'
+import { slugifyName } from '@/lib/slugify'
 
 export interface ProductFormData {
   _id?: string
@@ -51,13 +52,22 @@ function parseList(value: string): string[] {
     .filter(Boolean)
 }
 
+function normalizeImagePath(value: string): string {
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`
+}
+
 export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProps) {
   const [form, setForm] = useState<ProductFormData>(EMPTY)
   const [sizesText, setSizesText] = useState('S, M, L, XL')
   const [colorsText, setColorsText] = useState('Default')
   const [tagsText, setTagsText] = useState('')
+  const [slugTouched, setSlugTouched] = useState(false)
   const [loading, setLoading] = useState(!!productId)
   const [saving, setSaving] = useState(false)
+  const [uploadingIdx, setUploadingIdx] = useState<number | null>(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -73,6 +83,7 @@ export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProp
         setSizesText((data.sizes ?? []).join(', '))
         setColorsText((data.colors ?? []).join(', '))
         setTagsText((data.tags ?? []).join(', '))
+        setSlugTouched(true)
       } else {
         setError(res.error ?? 'Failed to load product')
       }
@@ -81,13 +92,19 @@ export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProp
   }, [productId])
 
   function updateField<K extends keyof ProductFormData>(key: K, value: ProductFormData[K]) {
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm((prev) => {
+      const next = { ...prev, [key]: value }
+      if (key === 'name' && !slugTouched && !productId) {
+        next.slug = slugifyName(String(value))
+      }
+      return next
+    })
   }
 
   function updateImage(idx: number, value: string) {
     setForm((prev) => {
       const images = [...prev.images]
-      images[idx] = value
+      images[idx] = normalizeImagePath(value)
       return { ...prev, images }
     })
   }
@@ -103,14 +120,47 @@ export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProp
     }))
   }
 
+  async function handleImageUpload(idx: number, file: File) {
+    setUploadingIdx(idx)
+    setError('')
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('category', form.category)
+    if (form.slug) formData.append('slug', form.slug)
+
+    const res = await apiUpload<{ url: string }>('/api/admin/upload', formData)
+    setUploadingIdx(null)
+
+    if (!res.success || !res.data?.url) {
+      setError(res.error ?? 'Image upload failed')
+      return
+    }
+    updateImage(idx, res.data.url)
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
     setError('')
 
+    const images = form.images.map(normalizeImagePath).filter(Boolean)
+    if (images.length === 0) {
+      setError('Add at least one image (upload or paste a path)')
+      setSaving(false)
+      return
+    }
+
+    const slug = slugifyName(form.slug || form.name)
+    if (!slug) {
+      setError('Enter a valid product name or slug')
+      setSaving(false)
+      return
+    }
+
     const payload = {
       ...form,
-      images: form.images.filter(Boolean),
+      slug,
+      images,
       sizes: parseList(sizesText),
       colors: parseList(colorsText),
       tags: parseList(tagsText),
@@ -157,7 +207,16 @@ export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProp
               </label>
               <label className="block text-[10px] uppercase tracking-widest text-theme-secondary">
                 Slug
-                <input className={inputClass} value={form.slug} required onChange={(e) => updateField('slug', e.target.value)} />
+                <input
+                  className={inputClass}
+                  value={form.slug}
+                  required
+                  onChange={(e) => {
+                    setSlugTouched(true)
+                    updateField('slug', e.target.value)
+                  }}
+                  placeholder="auto-generated-from-name"
+                />
               </label>
             </div>
 
@@ -214,6 +273,9 @@ export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProp
                   + Add image
                 </button>
               </div>
+              <p className="mb-3 text-[10px] text-theme-secondary">
+                Upload from phone or laptop — images are converted to WebP automatically.
+              </p>
               <div className="space-y-3">
                 {form.images.map((img, idx) => (
                   <div key={idx} className="flex flex-col gap-2 sm:flex-row sm:items-start">
@@ -224,18 +286,35 @@ export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProp
                         <div className="flex h-full items-center justify-center text-[9px] text-theme-secondary">No image</div>
                       )}
                     </div>
-                    <div className="flex flex-1 gap-2">
-                      <input
-                        className={`flex-1 ${inputClass}`}
-                        value={img}
-                        placeholder="/images/catalog/looks/example.webp"
-                        onChange={(e) => updateImage(idx, e.target.value)}
-                      />
-                      {form.images.length > 1 && (
-                        <button type="button" onClick={() => removeImageField(idx)} className="shrink-0 px-2 text-red-400">
-                          ✕
-                        </button>
-                      )}
+                    <div className="flex flex-1 flex-col gap-2">
+                      <label className="cursor-pointer rounded border border-dashed border-theme-subtle px-3 py-2 text-center text-[10px] uppercase tracking-widest text-theme-secondary hover:border-brand-white hover:text-brand-white">
+                        {uploadingIdx === idx ? 'Uploading…' : 'Upload photo'}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          className="hidden"
+                          disabled={uploadingIdx !== null}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file) void handleImageUpload(idx, file)
+                            e.target.value = ''
+                          }}
+                        />
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          className={`flex-1 ${inputClass}`}
+                          value={img}
+                          placeholder="/images/catalog/looks/example.webp"
+                          onChange={(e) => updateImage(idx, e.target.value)}
+                        />
+                        {form.images.length > 1 && (
+                          <button type="button" onClick={() => removeImageField(idx)} className="shrink-0 px-2 text-red-400">
+                            ✕
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -261,7 +340,9 @@ export function ProductEditor({ productId, onClose, onSaved }: ProductEditorProp
             {error && <p className="text-sm text-red-400">{error}</p>}
 
             <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-              <Button type="submit" disabled={saving} className="w-full sm:w-auto">{saving ? 'Saving...' : 'Save Product'}</Button>
+              <Button type="submit" disabled={saving || uploadingIdx !== null} className="w-full sm:w-auto">
+                {saving ? 'Saving...' : 'Save Product'}
+              </Button>
               <Button type="button" variant="outline" onClick={onClose} className="w-full sm:w-auto">Cancel</Button>
             </div>
           </form>
