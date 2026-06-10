@@ -7,6 +7,7 @@ Set-Location (Split-Path $PSScriptRoot -Parent)
 $AccountId = "fc8761363df4a7a310cc35ed41d1c809"
 $BucketName = "twoside-store-assets"
 $EnvFile = "server/.env"
+$RootProdEnv = ".env.production.local"
 $ClientEnv = "client/.env.production.local"
 
 Write-Host "=== Apply R2 environment ===" -ForegroundColor Cyan
@@ -53,17 +54,21 @@ function Set-EnvLine([string]$Path, [string]$Key, [string]$Value) {
     else { $line }
   }
   if (-not $found) { $out += "$Key=$Value" }
-  $out | Set-Content $Path -Encoding utf8
+  $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+  [System.IO.File]::WriteAllLines((Join-Path (Get-Location) $Path), $out, $utf8NoBom)
 }
 
 Set-EnvLine $EnvFile "R2_ACCOUNT_ID" $AccountId
 Set-EnvLine $EnvFile "R2_BUCKET_NAME" $BucketName
 Set-EnvLine $EnvFile "R2_PUBLIC_URL" $PublicUrl
 
+if (-not (Test-Path $RootProdEnv)) { New-Item -ItemType File -Path $RootProdEnv -Force | Out-Null }
+Set-EnvLine $RootProdEnv "VITE_CDN_URL" $PublicUrl
+
 if (-not (Test-Path $ClientEnv)) { New-Item -ItemType File -Path $ClientEnv -Force | Out-Null }
 Set-EnvLine $ClientEnv "VITE_CDN_URL" $PublicUrl
 
-Write-Host "Updated $EnvFile and $ClientEnv"
+Write-Host "Updated $EnvFile, $RootProdEnv, and $ClientEnv"
 
 Write-Host "Syncing R2_PUBLIC_URL to Worker..."
 Push-Location cloudflare/api

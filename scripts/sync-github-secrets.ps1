@@ -73,7 +73,10 @@ $varMap = @{
 }
 
 $clientEnv = Read-DotEnv "client/.env.production.local"
-if ($clientEnv.ContainsKey("VITE_CDN_URL") -and -not [string]::IsNullOrWhiteSpace($clientEnv["VITE_CDN_URL"])) {
+$rootProdEnv = Read-DotEnv ".env.production.local"
+if ($rootProdEnv.ContainsKey("VITE_CDN_URL") -and -not [string]::IsNullOrWhiteSpace($rootProdEnv["VITE_CDN_URL"])) {
+  $varMap["VITE_CDN_URL"] = $rootProdEnv["VITE_CDN_URL"]
+} elseif ($clientEnv.ContainsKey("VITE_CDN_URL") -and -not [string]::IsNullOrWhiteSpace($clientEnv["VITE_CDN_URL"])) {
   $varMap["VITE_CDN_URL"] = $clientEnv["VITE_CDN_URL"]
 }
 if ($envMap.ContainsKey("R2_PUBLIC_URL") -and -not [string]::IsNullOrWhiteSpace($envMap["R2_PUBLIC_URL"])) {
