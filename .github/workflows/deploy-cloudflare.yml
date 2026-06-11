@@ -40,8 +40,6 @@ jobs:
 
       - name: Sync catalog images
         run: node scripts/sync-catalog-images.mjs
-        env:
-          CATALOG_CDN_SOURCE: https://03fee126.twoside-store.pages.dev
 
       - name: Build client
         run: npm run build:client
